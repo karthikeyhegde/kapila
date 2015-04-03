@@ -1,0 +1,15 @@
+<% 
+p "KKKKKK"
+p @trans.errors.messages
+@trans.errors.messages.each{|e| %>
+ <div class="alert alert-warning">
+ <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+   </button>
+    <%=e[1][0]%></div>
+<%}%>
+<%if @trans.errors.empty? %>
+<div class="alert alert-warning">
+ <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+   </button>
+    <%=@serr%></div>
+<%end%>	

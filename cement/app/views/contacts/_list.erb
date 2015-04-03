@@ -1,0 +1,29 @@
+<table class="table table-striped " style="font-size:12px;width:80%;" align="center">
+  <thead style="color:#FFF;background-color:#8A0808;">
+    <th>Contact</th>
+    <th>Balance</th>
+    <th style="color:#A9F5F2">Action</th>
+  </thead>
+  <tbody>
+   <% @contacts.each{|c| %>
+    <tr>
+     <td> <b><%=link_to c.name , report_page_contact_path(:id => c.id)%></b> &nbsp; Ph:<%=c.contact_number%>
+        <br>
+        <%=c.subname%>  <span class="greytext"><%=c.contact_type%> <%=c.place%></span>
+
+     </td>
+     <td><%=c.balance%></td>
+    
+    <td>
+        <span id ='t1'>
+          <%=link_to "Edit", edit_contact_url(c.id), :class=>"label label-info"%><%=space(5).html_safe%>
+        </span>
+        <span id='t2'>
+          <%=link_to "Delete", remove_contact_url(c.id), :method => :post, :onclick => "return confirm('Are you sure?')", :class=>"label label-warning"%>
+        </span>
+    </td>
+   </tr>
+   <%}%>
+  </tbody>
+
+</table>

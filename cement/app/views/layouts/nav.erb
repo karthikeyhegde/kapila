@@ -1,0 +1,56 @@
+<div class="navbar navbar-inverse navbar-fixed-top" style="max-height:20px;">
+ <div class="navbar-inner" style="max-height:20px;" >
+
+    <ul class="nav" >
+    <li>&nbsp;&nbsp;&nbsp;</li>
+     <li><%=link_to " Cement", transactions_url, :class => "brand" ,:style =>"font-size:14px;color:#FFF;"%></li>
+      <li  <% if params[:controller]  == "contacts"%> class='active'<%end%>><%=link_to "Contacts", contacts_url %></li>
+      <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Go  <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+
+            
+            <li <% if params[:controller]  == "transactions"%> class='active'<%end%>><%=link_to "Transactions", transactions_url %></li>
+            <li <% if params[:controller]  == "payments"%> class='active'<%end%>><%=link_to "Payments", payments_url %></li>
+             <li <% if params[:controller]  == "items"%> class='active'<%end%>><%=link_to "Items", items_url%></li>
+            <li <% if params[:controller]  == "sites"%> class='active'<%end%>><%=link_to "Sites", sites_url%></li>
+           <hr style="margin:5px;">
+            <li <% if params[:controller]  == "users"%> class='active'<%end%>><%=link_to "Users", users_url %></li>
+         
+             
+          </ul>
+       </li>
+
+       <a class="btn btn-primary" style="color:#FFF" href="<%=new_transaction_url%>">
+                  <span style='font-weight :bold;font-size:20px;'> + </span>  <span> Transaction</span>
+                </a>
+
+
+
+                <a class="btn btn-success" style="color:#FFF" href="<%=new_payment_url%>">
+                    <span style='font-weight :bold;font-size:20px;'>+</span><span> Payment</span>
+               </a>
+
+             
+    </ul>
+
+    <ul class="nav navbar-nav pull-right">
+        <li>
+            <form class="navbar-search" action="<%=all_search_items_url%>">
+                <input name='search' type="text" class="search-query span2" style="background-color:#FAFAFA;color:#585858;height:25px;" placeholder="Search">    
+            </form>
+        </li>
+
+       <li class="dropdown">
+        <a href="#" data-toggle="dropdown" class="dropdown-toggle" style="color:#FFF"> <%=@auser.full_name%>  <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+               <li><%=link_to "Details", edit_user_url(:id => @auser.id) %></li>
+             <li><%=link_to "Log Out", logout_user_url(:id => @auser.id) %> </li> 
+          </ul>
+      </li>
+          
+    </ul>
+
+  </div>
+
+</div>
