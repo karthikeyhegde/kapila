@@ -121,6 +121,7 @@ Cement::Application.routes.draw do
     get 'reset_password', :on => :member
     get 'logout', :on => :member
     get  'no_access', :on => :collection
+    get  'self_details', :on => :member
   end  
 
   resources :payments do
