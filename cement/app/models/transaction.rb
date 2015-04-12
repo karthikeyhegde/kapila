@@ -75,9 +75,6 @@ class Transaction < ActiveRecord::Base
 
   def calculate_contact_balance
      p "CALC CONT BAL"
-     p buyback
-     p recieved
-     p self.payment_amount
      buyback == 1? txn_amount = (self.amount * -1) : txn_amount = self.amount
      recieved == 0? txn_payment = (self.payment_amount * -1) : txn_payment = self.payment_amount.to_f
      
@@ -93,17 +90,19 @@ class Transaction < ActiveRecord::Base
 
      txn_erlier = Transaction.where(" contact_id = ? and ( on_date < ? OR on_date = ? )",self.contact_id,self.on_date,self.on_date).order("on_date,created_at ASC")
      self.contact_balance = ( txn_erlier.size > 0 ? txn_erlier.last.contact_balance + self.difference_amount : self.difference_amount   )
+     
   end	
 
   def rectify_amount
     if payment_amount_changed? || amount_changed? || buyback_changed? || recieved_changed?
+     
       buyback == 1? txn_amount = (self.amount.to_f * -1) : txn_amount = self.amount.to_f
       recieved == 0? txn_payment = (self.payment_amount.to_f * -1) : txn_payment = self.payment_amount.to_f 
 
       self.buyback_was ==1? txn_amount_old = (self.amount_was.to_f * -1): txn_amount_old = self.amount_was.to_f
       self.recieved_was == 0? txn_payment_old = (self.payment_amount_was.to_f * -1) : txn_payment_old = self.payment_amount_was.to_f
 
-      new_balance =  self.amount.to_f - self.payment_amount.to_f
+      new_balance =  txn_amount - txn_payment
       old_balance =  txn_amount_old - txn_payment_old
 
       self.difference_amount = new_balance - old_balance
@@ -121,7 +120,7 @@ class Transaction < ActiveRecord::Base
 
   def update_balance_changes
    p "here ---"
-   p self.difference_amount 
+   p self.difference_amount.to_i
     if !self.difference_amount.blank? 
        msql_date = mysql_date(self.on_date)
        sql = "UPDATE transactions set contact_balance = (contact_balance + (#{self.difference_amount}) ) "
@@ -169,16 +168,23 @@ class Transaction < ActiveRecord::Base
     end  
     def total_amount txn_arr
       amount = 0
-      txn_arr.each{|t| amount += t.amount.to_f}
-      amount
+      txn_arr.each{|t| 
+
+        amount += t.amount.to_f
+      }
     end
 
     def total_balance txn_arr
       balance = 0
       payment = 0
-      txn_arr.each{|t| payment += t.payment_amount.to_f}
+      txn_arr.each{|t|
+
+       payment += t.payment_amount.to_f
+
+      }
       amount = 0
-      txn_arr.each{|t| amount += t.amount.to_f}
+      txn_arr.each{|t| 
+        amount += t.amount.to_f}
       amount - payment
     end  
     

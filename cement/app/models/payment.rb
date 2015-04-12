@@ -21,15 +21,11 @@ class  Payment < Transaction
   end
 
   def assign_amount
-    p "KKK"
     a = 0
     self.payment_rows.each{|p|
       a += p.amount
     }
-    p a.to_i
     self.payment_amount = a 
-    p "JJKKJKK"
-    p self.payment_amount.to_i
   end  
   
   def is_number?

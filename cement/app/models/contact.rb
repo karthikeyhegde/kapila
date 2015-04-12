@@ -43,7 +43,12 @@ class Contact < ActiveRecord::Base
 
   def total_purchase
     t_amount = 0.0
-    self.transactions.each{|t| t_amount += t.amount.to_f}
+    self.transactions.each{|t| 
+
+      t_amount -= t.amount.to_f  if t.buyback == 1
+      t_amount += t.amount.to_f  if t.buyback != 1
+
+    }
     return t_amount
   end  
 

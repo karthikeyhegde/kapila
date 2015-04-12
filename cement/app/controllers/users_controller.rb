@@ -107,7 +107,7 @@ def remove
     UserMailer.password_reset(@user).deliver
     @user.save!
     flash[:info] = 'Password has been reset successfully for '+@user.full_name
-    flashh[:info] += "Email has been sent to "+@user.email
+    flash[:info] += "  Email has been sent to "+@user.email
    rescue Exception => e
      flash[:info] = "Password reset was UNSUCCESS. "+e.to_s
    end 
@@ -141,6 +141,9 @@ def remove
     @auser = nil
     flash[:error] = "Log out Successfull"
     redirect_to :action => "ask_signin"
+  end  
+
+  def sel_details
   end  
 
 end

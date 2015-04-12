@@ -66,12 +66,18 @@ respond_to :json, :html
  end 
 
  def quick_update
-  hsh[params[:name]] = params[:value]
-  id = params[:pk].to_i
-  @c = Contact.find(id)
-  @c.update_attributes(hsh)
-   render :json => {"message" => "Success"}
+  begin
+    hsh = {}
+    hsh[params[:name]] = params[:value]
+    id = params[:pk].to_i
+    @c = Contact.find(id)
+    @c.update_attributes(hsh)
+     render :json => {"message" => "Success"}
+  rescue Exception => e
+    p e   
+  end
  end
+
  
  def all_edit
  end
