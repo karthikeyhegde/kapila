@@ -172,6 +172,7 @@ class Transaction < ActiveRecord::Base
 
         amount += t.amount.to_f
       }
+      return amount
     end
 
     def total_balance txn_arr

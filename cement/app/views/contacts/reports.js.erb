@@ -2,5 +2,5 @@
  var x=window.open('','_blank','width=1000px,height=600, scrollbars=yes, resizable=yes');
 x.document.open().write("<%=j (render :partial=>'contacts/reports') %>").close();
 <%else%>
-$('#trs').html("<%=j (render :partial=>'contacts/reports') %>");
+ $('#contact_report').html("<%=j (render :partial=>'contacts/reports') %>");
 <%end%>

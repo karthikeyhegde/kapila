@@ -1,9 +1,8 @@
 
-
 <%if params[:commit] == 'Print View'%>
-<div id="amnt" class="row-fluid" >
-    <table class="table table-striped " style='font-size:12px;width:80%;text-align:left' align="center">
-              <thead></thead>
+
+    <table class="table table-striped " style='font-size:12px;width:80%;text-align:left;' align="center">
+        <thead></thead>
         <tr>
          <td> <b> <%=@contact.name%></b></td>
          <td> Ph: <%=@contact.contact_number%></td>
@@ -12,39 +11,41 @@
                 Details : <%=@contact.address %>
               <%end%>
          </td>       
-         </tr>
-        <%end%>  
-              <tr>
-                 <td> Total Amount : </td>
-                 <td> <%=@contact.total_purchase%></td>
-                 <td></td>
-                 <td>Total Payment : </td>
-                 <td><%=@contact.total_payment%></td>
-                 
-              </tr>
-              <tr>
-                <td> Baaki/Starting Amount : </td>
-                <td><%=@contact.starting_balance%></td>
-                <td></td>
-                <td>Current Balance :</td>
-                <td><%=@contact.balance%></td>
-              </tr>
+        </tr>
+  
+	    <tr>
+	         <td> Total Amount : </td>
+	         <td> <%=@contact.total_purchase%></td>
+	         <td></td>
+	         <td>Total Payment : </td>
+	         <td><%=@contact.total_payment%></td>
+	    </tr>
+        <tr>
+            <td> Baaki/Starting Amount : </td>
+            <td><%=@contact.starting_balance%></td>
+            <td></td>
+            <td>Current Balance :</td>
+            <td><%=@contact.balance%></td>
+        </tr>
 
-              <%if  params[:from_date] != '2000-01-01' || params[:to_date] != '2100-01-01'%>
-         <tr>
+        <%if  params[:from_date] != '2000-01-01' || params[:to_date] != '2100-01-01'%>
+          <tr>
 
            <td> <span style="color:#b8b8b8"> &nbsp;Details </span>
-            <span style="color:#b8b8b8">
-            <%if params[:from_date] != '2000-01-01' and !params[:from_date].blank?%> From <%=params[:from_date]%> <%end%>
-            <%if params[:to_date] != '2100-01-01' and !params[:to_date].blank? %>  Up to <%=params[:to_date]%> <%end%>
-            </span>
+	            <span style="color:#b8b8b8">
+		            <%if params[:from_date] != '2000-01-01' and !params[:from_date].blank?%> 
+		               From <%=params[:from_date]%> 
+		            <%end%>
+		            <%if params[:to_date] != '2100-01-01' and !params[:to_date].blank? %> 
+		                Up to <%=params[:to_date]%> 
+		            <%end%>
+	            </span>
             </td>
-        </tr>    
-          </table>
-   
-        </div>
-    </div>
-</div>
+        </tr>   
+        <%end%> 
+    </table>
+<%else%>
+ <h5>Transactions</h5>    
 <%end%>
 
 <table class="table table-striped " style='font-size:12px;width:80%;text-align:left' align="center" rules="rows">
@@ -138,4 +139,7 @@
   </tbody>
 
 </table>
-
+<br>
+<%if params[:commit] != 'Print View'%>
+<hr>
+<%end%>

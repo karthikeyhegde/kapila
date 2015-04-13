@@ -1,53 +1,52 @@
 
 <div id='criteria' class="row-fluid" style="line-height:6px;">  
-
-  <div class='span5'>
-     <br><b>
-     <span style="font-size:18px;color:#330099"><%=@contact.name%></span> &nbsp;&nbsp; Ph: <%=@contact.contact_number%> 
+<div class='span7'>
+<br><br>
+  <span  style="font-size:18px;color:#330099"><%=@contact.name%></span>
+     &nbsp;&nbsp; Ph: <%=@contact.contact_number%> 
      <%if !@contact.address.blank? %>
       &nbsp;&nbsp;
-     Details: <%=@contact.address%>
+      Details: <%=@contact.address%>
      <%end%>
-     </b>
-  </div>
+
+</div>
 
    <div class="span5 pull-right" >
-      <br>
+   <br>
        <%=form_tag reports_contact_path(:id=>@contact.id), :remote => true do%>
-       <%=text_field_tag :from_date, '', {class: 'report-date', style:'height:20px;width:120px;', :placeholder => "From Date"}%>
+        <%=text_field_tag :from_date, '', {class: 'report-date', style:'height:20px;width:120px;', :placeholder => "From Date"}%>
 
-        <span style="font-size:18px;"> - </span>
+       <span style="font-size:18px;"> - </span>
         <%=text_field_tag :to_date, '', {class: 'report-date', style:'height:20px;width:120px;', :placeholder => "To Date"}%>
           <%=submit_tag "Show" , {class:'btn btn-primary btn-xs', style:'vertical-align: top;'}%>
           <%=submit_tag "Print View" , {class:'btn btn-warning btn-xs', style:'vertical-align: top;'} %>     
-        <%end%>
+       <%end%>
    </div>
 </div>
 
 <div id="amnt" class="row-fluid" >
-    <div class="span2 offset1"  style="padding-left:20px;">
-       Total Amount : <%=@contact.total_purchase%>
-    </div>
+
+   <div class="span2 offset1"  style="padding-left:20px;">
+     Total Amount : <%=@contact.total_purchase%>
+   </div>
     <div class="span2" >
       Total Payment : <%=@contact.total_payment%>
-    </div>
-    <div class="span3" >
-      Baaki/Starting Amount : <%=@contact.starting_balance%>
-    </div>
-    <div class="span2" >
-      Total Balance : <%=@contact.balance%>
-    </div>
-</div>
-<hr>
-<div id="trs" class="row-fluid">
-   <div class="span12" id='contact_report'>
-     <h5>Transactions</h5>
-      <%=render :template => 'transactions/_list.erb'%>
    </div>
-   <hr>
+   <div class="span3" >
+    Baaki/Starting Amount : <%=@contact.starting_balance%>
+   </div>
+   <div class="span2" >
+      Total Balance : <%=@contact.balance%>
+   </div>
 </div>
 
 <div id="trs" class="row-fluid">
+   <div class="span12" id='contact_report'>
+      <h5>Transactions</h5>    
+      <%=render :template => 'transactions/_list.erb'%>
+   </div>
+</div>
+<div id="trs1" class="row-fluid">
    <div class="span12">
      <h5>Item Purchased</h5>
       <%=render :template => 'txn_items/list.erb'%>
@@ -55,7 +54,7 @@
 </div>
 
 
-<div id="trs" class="row-fluid">
+<div id="trs2" class="row-fluid">
    <div class="span12">
      <h5>Payments</h5>
       <%=render :template => 'payments/_list.erb'%>
