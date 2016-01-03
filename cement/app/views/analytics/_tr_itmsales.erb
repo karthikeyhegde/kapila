@@ -2,7 +2,7 @@
 <%@its.each{|r| %>
               <tr>
                 <td>
-                   <%=link_to r[1] , report_page_contact_path(:id => r[0])%>
+                   <%=link_to r[1] , rep_txnitems_item_url(r[0])%>
                 </td>
                 <td>
                    <%=Utility.indian_number r[2]%>
