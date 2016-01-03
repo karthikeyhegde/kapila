@@ -26,7 +26,7 @@
     <td><%c.payment_rows.each {|p| %>
        <%=p.pay_type%> : <%if !p.note.blank?%> <%=p.note%>  : <%end%> <%=p.amount%> <br>
      <% }%>
-     <%if c.discount > 0%>Discount : <%=c.discount%><%end%></td>
+     <% if ( c.discount.to_i > 0)  %>Discount : <%=c.discount%> <%end%></td>
     <td><%=c.payment_note%></td>
     <td><%=c.tofrom_contact%></td>
     <td><%=c.payment_amount%></td>

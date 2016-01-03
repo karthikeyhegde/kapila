@@ -1,0 +1,106 @@
+
+
+    <table class="" style='font-size:14px;width:90%;text-align:left;' align="center">
+        <thead></thead>
+        <tr>
+         <td> <b> <%=@contact.name%></b></td>
+         <td> Ph: <%=@contact.contact_number%></td>
+         <td>
+              <%if !@contact.address.blank? %>
+                Details : <%=@contact.address %>
+              <%end%>
+         </td>       
+        </tr>
+  
+	   
+        <tr>
+            <td>Balance : &nbsp;&nbsp; <%=Utility.indian_number(@contact.balance)%></td>
+            <td></td>
+        </tr>
+
+       
+    </table>
+
+
+<table class=" " style='font-size:13px;width:100%;text-align:left' align="center" rules="rows">
+  <thead style="background-color:#FE2E9A;">
+    <th height="20px;">Date</th>
+    <th>Note</th>
+    <th >Item</th>
+    <th>Total</th>
+    <th>Payment</th>
+    <th class="col-sm-1" style="color:#330099">Balance</th>
+  </thead>
+  <tbody>
+   <% i = 0
+   @transactions.each{|c|
+     i+= 1 %>
+    <%if i%2 == 0%>
+       <tr>
+    <%else%>
+       <tr style="background-color:#00FFFF;">
+    <%end%>
+    <td height="30px;"><%=c.on_date%></td>
+    <td>
+     <% if c.trans_type == 'payment'  %>
+        <%if c.recieved == 0 %>
+          PAYMENT PAID
+          <%else%>
+           PAYMENT RECIEVED
+         <%end%>
+         <br>
+        <%end%> 
+       <%if !c.site.blank? %> Site : <%=link_to c.site.name, rep_txnitems_site_url(:id => c.site.id)%><br><%end%>
+       <%if !c.descri.blank? %>
+         <%=c.descri%>
+         <br>
+       <%end%>
+        
+           <% if c.buyback == 1%>
+               Items Returned
+             <%end%>  
+    </td>
+
+    <td>
+
+      <% if c.trans_type == 'payment'  %>
+       
+         <%c.payment_rows.each {|p| %>
+            <%=p.pay_type%> : <%if !p.note.blank?%> <%=p.note%>  : <%end%> <%=p.amount%> <br>
+         <% }%>
+
+      <% else %>
+        <%c.txn_items.each{|tx|%>
+         <%=tx.item.name%> &nbsp;&nbsp; <%=tx.number%> &nbsp;*&nbsp;<%=tx.price%> 
+         <br>
+        <%}%>
+        <%if c.hamaali.to_i > 0%>
+          Hamaali &nbsp&nbsp <%=Utility.indian_number(c.hamaali)%>
+          <br>
+        <%end%>
+        <%if c.vehicle_charges.to_i > 0%>
+          Vehicle charges &nbsp&nbsp <%=Utility.indian_number(c.vehicle_charges)%>
+          <br>
+        <%end%>
+      <%end%>
+      <%if c.discount.to_i > 0%>
+        Discount &nbsp&nbsp <%=Utility.indian_number(c.discount)%>
+      <%end%>
+      
+      </td>
+    <td> <% if c.trans_type != 'payment' %>
+            <% if c.buyback == 1%> -
+             <%end%>  
+          <%=Utility.indian_number c.amount%>
+        <%end%>
+    </td>
+    <td> <%= Utility.indian_number c.payment_amount%> </td>
+    <td> <%=Utility.indian_number((c.contact_balance + c.contact.starting_balance))%> </td>
+   </tr>
+   <%}%>
+
+   
+  </tbody>
+
+</table>
+<hr>

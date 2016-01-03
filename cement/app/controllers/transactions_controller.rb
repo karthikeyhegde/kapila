@@ -2,13 +2,26 @@ class TransactionsController < ApplicationController
   @@available_action = ['new_sale','new_return','new_payment']
  
  def index
-  sort_column = params[:sort_colum] || 'on_date'
-  sort_order = params[:sort_order]  || "DESC"
-  page_size = params[:page_size] || 20
-  offset = params[:offset] || 0
+  @sort_column = params[:sort_colum] || 'on_date'
+  @sort_order = params[:sort_order]  || "DESC"
+  @page_size = params[:page_size] || 20
 
+  no_of_weeks =  params[:no_of_weeks].blank? ? 2 : params[:no_of_weeks].to_i
+  date_str = "on_date > '"+no_of_weeks.weeks.ago.strftime("%Y-%m-%d")+"' " if no_of_weeks > 1
+  @trs_text = "Showing  transactions from last "+no_of_weeks.to_s+" weeks ."
   
-   @trs = Transaction.order("#{sort_column} #{sort_order}, created_at DESC")
+  if !params[:from_date].blank? || !params[:to_date].blank?
+    from_date = ( params[:from_date].blank? ?  '2000-01-01': DateTime.parse(params[:from_date]).strftime('%Y-%m-%d %H:%M'))
+    to_date   = ( params[:to_date].blank? ? '2100-01-01' : DateTime.parse(params[:to_date]).strftime('%Y-%m-%d %H:%M') )
+    date_str  = " on_date  between '"+from_date+"' and '"+to_date+"'"
+    @trs_text = " Showing transactions "
+    @trs_text += " from "+params[:from_date] if  !params[:from_date].blank?
+    @trs_text += " up to "+params[:to_date] if  !params[:to_date].blank?
+  end
+  offset = params[:offset] || 0
+  total = Transaction.count
+  @trs = Transaction.where(date_str).order("#{@sort_column} #{@sort_order}, created_at DESC ")
+  
  end
 
  def show
@@ -47,11 +60,24 @@ class TransactionsController < ApplicationController
       ti = TxnItem.new(item_params)
       ti.contact_id = params[:transaction][:contact_id]
       ti.amount = ti.calculate_amount
+      ti.buyback_now = @trans.buyback
       @trans.txn_items << ti
      end 
     }
 
-     site_param = params[:txn][:site]
+     contact_name = params[:txn][:contact].strip
+      if !contact_name.blank? and  contact_name.length > 3
+        if params[:txn][:contact_id].to_i < 1  and Contact.find_by_name(contact_name).nil?
+            contact = Contact.new
+            contact.name = contact_name
+            contact.regular = 0
+            contact.save!
+            @trans.contact_id = contact.id
+        end  
+         
+      end  
+
+     site_param = params[:txn][:site].strip
      if !site_param.blank? and  site_param.length > 3
        site = Site.find_by_name(site_param)
        if site == nil
@@ -59,6 +85,8 @@ class TransactionsController < ApplicationController
          site.name = site_param
          site.save!
        end 
+      
+
 
        @trans.site = site
      end
@@ -67,7 +95,18 @@ class TransactionsController < ApplicationController
       @trs = Transaction.all
       flash[:notice] = 'Transaction# '+@trans.id.to_s+' added Successfully !'
       flash.keep(:notice)
-      render js: "window.location.pathname='#{transactions_path}'"
+
+      if params[:commit] == 'Save and +New'
+          respond_to do |format|
+            format.js {render 'save_and_ad_new', layout: false}
+          end  
+      else
+        url = report_page_contact_path(:id => @trans.contact_id)
+        render js: "window.location.pathname='#{url}'"
+      end  
+      #render js: "window.location.pathname='#{transactions_path}'"
+
+      
     rescue Exception => e
      p e.to_s
      @serr = e.to_s
@@ -85,7 +124,7 @@ class TransactionsController < ApplicationController
 
  def update
    @trans = Transaction.find(params[:id])
-    txn_ids = []
+   txn_ids = []
    params[:txn_items].each{|key,val|
 
       id = key.to_i
@@ -101,10 +140,12 @@ class TransactionsController < ApplicationController
         txn_ids << ti.id
       else
          old_txi = TxnItem.find(id)  
-
+         
          if old_txi.item_id != val[:item_id].to_i || old_txi.price != val[:price].to_f || old_txi.number != val[:number].to_i
            val[:updated_by] = @auser.id
            val[:amount] = val[:price].to_f * val[:number].to_i
+           val[:buyback_was] = @trans.buyback
+           val[:buyback_now] = params[:transaction][:byback].to_i
            old_txi.update_attributes(val)          
          end          
       end 
@@ -115,9 +156,7 @@ class TransactionsController < ApplicationController
         txn.destroy if  !txn_ids.include?(txn.id)
       }
 
-
      site_param = params[:txn][:site]
-     p "SITE PARAM"
 
      if !site_param.blank? and  site_param.length > 3
        site = Site.find_by_name(site_param)
@@ -127,19 +166,10 @@ class TransactionsController < ApplicationController
          site.name = site_param
          site.save!
        end 
-
-           p "SITE"
-       p site.name
-       p site.id
-
-       p "2 nd SITE ID"
        params[:transaction][:site_id] = site.id
 
      end
 
-
-    p "RARAM"
-    p params[:transaction]
     begin  
      p "CALLING 1"
      @trans.skip_updator = true
@@ -166,8 +196,13 @@ class TransactionsController < ApplicationController
  end
 
 def remove
+  begin
    Transaction.find(params[:id]).destroy
    redirect_to :action => 'index'
+  rescue Exception => e 
+    p e.to_s
+    p e.backtrace
+  end  
  end
 
  def add_item_row
@@ -187,6 +222,44 @@ def remove
 
  end 
 
+ def pagination
+   
+  @sort_column = params[:sort_colum] || 'on_date'
+  @sort_order = params[:sort_order]  || "DESC"
+  @page_size = params[:page_size] || 20
+
+  no_of_weeks =  params[:no_of_weeks].blank? ? 2 : params[:no_of_weeks].to_i
+  date_str = "on_date > '"+no_of_weeks.weeks.ago.strftime("%Y-%m-%d")+"' " if no_of_weeks > 1
+  @trs_text = "Showing  transactions from last "+no_of_weeks.to_s+" weeks ."
+  
+  date_str = "on_date >  '"+1.months.ago.strftime("%Y-%m-%d")+"'" if params[:month_ago] == 'true'
+
+  if !params[:from_date].blank? || !params[:to_date].blank?
+    from_date = ( params[:from_date].blank? ?  '2000-01-01': DateTime.parse(params[:from_date]).strftime('%Y-%m-%d %H:%M'))
+    to_date   = ( params[:to_date].blank? ? '2100-01-01' : DateTime.parse(params[:to_date]).strftime('%Y-%m-%d %H:%M') )
+    date_str  = "on_date  between '"+from_date+"' and '"+to_date+"'"
+    @trs_text = "Showing transactions "
+    @trs_text += " from "+params[:from_date] if  !params[:from_date].blank?
+    @trs_text += " up to "+params[:to_date] if  !params[:to_date].blank?
+  end
+
+   @trs = Transaction.where(date_str).order("#{@sort_column} #{@sort_order}, created_at DESC ")
+
+   respond_to do |format|
+      format.js {render layout: false}
+   end 
+ end 
+
+ def quick_add_form
+
+  @trans = Transaction.new
+  @cont = Contact.all_conts
+   
+ end 
+
+ def quick_add
+ end
 
 
+ 
 end

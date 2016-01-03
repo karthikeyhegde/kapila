@@ -66,5 +66,6 @@ Cement::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   config.action_mailer.perform_deliveries = true
-config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.raise_delivery_errors = true
+  Rails.application.routes.default_url_options[:host] = 'http://hegde.co.in/cement'
 end

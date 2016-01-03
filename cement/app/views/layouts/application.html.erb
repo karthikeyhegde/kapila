@@ -2,8 +2,9 @@
 <html>
 <head>
    <%=render :template => "layouts/header.erb" %>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 </head>
-<body>
+<body link="blue">
 <%=render :template => "layouts/nav.erb" %>
 
 <div class="container-fluid">
@@ -11,7 +12,7 @@
   <div class="row-fluid" style="padding:5px">
 
     <div class="span12"style="text-align:left" id="contacts">
-          <%=render :template => "contacts/_index.html.erb" %>
+          
             <%=yield%>
     </div>
 

@@ -1,13 +1,14 @@
   
 <div id='contact-modal-window' class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" scrollable ="true">
  Loading ...
-
 </div>
 
 <%= form_for @trans,  :method => @form_method, :remote => true, :html =>{:id=>'transaction_form'} do |f| %>
 
+   
   <div  id='form_elements' class="row-fluid txn-form" style="padding-bottom : 0px;">
      <div class="span1" >
+
      </div>
      <div class="span3" >
         Date : <br><%= f.text_field :on_date, class:'input', style:'height:30px;width:150px'%>
@@ -125,12 +126,19 @@
      </div>
   <div class="span11">
      <hr>
-     <%=submit_tag 'Save Transaction',  class:'btn btn-warning', :data => {disable_with: "Saving ..."}, id:'tx-btn'%><%=space(5).html_safe%> <%=link_to "Cancel", transactions_url, :style=>"font-weight:bold"%>
+     <%=submit_tag 'Save Transaction',  class:'btn btn-warning', :data => {disable_with: "Saving ..."}, id:'tx-btn'%><%=space(5).html_safe%>
+     <%=submit_tag 'Save and +New',  class:'btn btn-success', :data => {disable_with: "Saving ..."}, id:'tx-btn'%><%=space(5).html_safe%>
+      <%=link_to "Cancel", transactions_url, :style=>"font-weight:bold"%>
 
   </div>
 </div>
+
+ 
 <% end %>
 
+
+
+ 
 <script type="text/javascript">
 
 $('#transaction_on_date').datepicker({ dateFormat: 'dd-mm-yy' });

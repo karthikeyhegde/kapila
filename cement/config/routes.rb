@@ -1,6 +1,7 @@
 Cement::Application.routes.draw do
 
 
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -65,6 +66,7 @@ Cement::Application.routes.draw do
       post 'remove', :on => :member
       get  'rep_txnitems', :on => :member
       get  'all_search', :on => :collection
+      get  'aggrigated_summary', :on => :collection
 
   end
 
@@ -72,7 +74,6 @@ Cement::Application.routes.draw do
     post 'remove', :on => :member
     post  'reports', :on => :member
     post  'ajax_create', :on => :collection
- 
 
     get 'search_names', :on => :collection
     get  'add_txn', :on => :collection
@@ -90,15 +91,26 @@ Cement::Application.routes.draw do
 
   resources :transactions do
     post 'remove', :on => :member
-    get 'add_item_row', :on => :collection
+    get  'add_item_row', :on => :collection
+    post 'pagination', :on => :collection
+    get  'quick_add_form', :on => :collection
+    post 'quick_add', :on => :collection
+  end
+
+  resources :stock_entries do
+    post 'remove', :on => :member
+    get  'add_item_row', :on => :collection
+    post 'pagination', :on => :collection
+    get  'quick_add_form', :on => :collection
+    post 'quick_add', :on => :collection
   end
 
   resources :sites do
     get  'window_list', :on => :collection
     get 'search_names', :on => :collection
-
     post 'remove', :on => :member
     get 'rep_txnitems', :on => :member
+    get 'contact_txnitems', :on => :member
   end
 
   resources :transaction_types do
@@ -126,8 +138,26 @@ Cement::Application.routes.draw do
 
   resources :payments do
       post 'remove', :on => :member
-      get 'add_payment_row', :on => :collection
-  end    
+      get  'add_payment_row', :on => :collection
+  end   
+
+   resources :reports do
+      post 'generate', :on => :collection
+      get 'saved_message', :on => :member
+      
+   end 
+
+   resources :analytics do
+      get  'sort_baldtls', :on => :collection
+      get  'sales', :on => :collection
+      get  'sort_itemsales', :on => :collection
+      post 'filter_block1', :on => :collection
+      post 'filter_block2', :on => :collection
+      post 'filter_block3', :on => :collection
+      put  'filter_block1', :on => :collection
+   end 
+
+   get "status", to:"analytics#aggr_payments"
 
 end
     

@@ -1,15 +1,17 @@
-<% 
-p "KKKKKK"
-p @trans.errors.messages
-@trans.errors.messages.each{|e| %>
- <div class="alert alert-warning">
- <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+ <tr>
+ <td colspan=3>
+   <div class="alert alert-warning">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
    </button>
-    <%=e[1][0]%></div>
+    <b> Transaction Not Saved !! </b><br>
+       Below error occored <br>
+<% @trans.errors.messages.each{|e| %>
+    . <%=e[1][0]%>
+    <br>
 <%}%>
 <%if @trans.errors.empty? %>
-<div class="alert alert-warning">
- <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
-   </button>
-    <%=@serr%></div>
+   . <%=@serr%>
+
 <%end%>	
+</div>
+ </td></tr>

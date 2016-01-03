@@ -10,11 +10,13 @@ class Contact < ActiveRecord::Base
   has_many :payments
   
   before_create :assign_balance
-  before_update  :rectify_contact_balance
+  after_update  :rectify_contact_balance
+
+ # before_update  :rectify_contact_balance
 
   validates :name, :presence => { :message => " Cannot be blank" }
   validates :name, uniqueness: { scope: :subname,
-    message: "Contact already exists. Try with different name or tag name" }
+  message: "Contact already exists. Try with different name or tag name" }
 
   def unique_contact
 
@@ -40,6 +42,10 @@ class Contact < ActiveRecord::Base
   def self.trns_search(str)
   	s_contacts = self.where("name  like '%#{str}%' or subname  like '%#{str}%' ").select('id,name,subname,contact_number').order('name asc')
   end	
+
+  def self.all_conts
+     select('id,name,subname,contact_number').order('name asc')
+  end
 
   def total_purchase
     t_amount = 0.0
@@ -84,12 +90,10 @@ class Contact < ActiveRecord::Base
   def rectify_contact_balance
      if starting_balance_changed?
         diff = starting_balance.to_f - starting_balance_was.to_f
-        p "PPPPP"
-        p diff.round(2).to_s
         self.balance += diff
-        p self.balance.round(2).to_s
         sql = "UPDATE transactions set contact_balance = (contact_balance + (#{diff}) ) "
         sql << "where contact_id = #{self.id} "
+        p sql
         ActiveRecord::Base.connection.execute(sql)      
      end
   end
@@ -108,4 +112,22 @@ class Contact < ActiveRecord::Base
      Payment.where("contact_id =? ", self.id).order("on_date DESC")
   end  
 
+
+  def self.picklist
+     c_arr = []
+     self.order("name").each{|a| 
+      c_arr << [a.name_subname, a.id]
+     }
+     return c_arr
+  end  
+
+  def self.total_starting_balance
+       t_balance = 0
+       self.all.each{|c|  
+
+        t_balance = t_balance + c.starting_balance  if !c.starting_balance.blank?
+
+       } 
+       return t_balance
+  end  
 end

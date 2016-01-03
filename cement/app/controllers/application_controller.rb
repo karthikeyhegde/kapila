@@ -17,6 +17,8 @@ class ApplicationController < ActionController::Base
      @auser = User.find(session[:user_id])
      Thread.current[:auser] = nil
      User.current_user= @auser
+     p "IIII"
+     p @auser.id
 
   end	
 

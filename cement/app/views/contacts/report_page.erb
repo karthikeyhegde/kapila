@@ -1,7 +1,6 @@
 
 <div id='criteria' class="row-fluid" style="line-height:6px;">  
 <div class='span7'>
-<br><br>
   <span  style="font-size:18px;color:#330099"><%=@contact.name%></span>
      &nbsp;&nbsp; Ph: <%=@contact.contact_number%> 
      <%if !@contact.address.blank? %>
@@ -27,28 +26,38 @@
 <div id="amnt" class="row-fluid" >
 
    <div class="span2 offset1"  style="padding-left:20px;">
-     Total Amount : <%=@contact.total_purchase%>
+     Total Amount : <%= Utility.indian_number @contact.total_purchase%>
    </div>
     <div class="span2" >
-      Total Payment : <%=@contact.total_payment%>
+      Total Payment : <%= Utility.indian_number @contact.total_payment%>
    </div>
    <div class="span3" >
-    Baaki/Starting Amount : <%=@contact.starting_balance%>
+    Baaki/Starting Amount : <%= Utility.indian_number @contact.starting_balance%>
    </div>
    <div class="span2" >
-      Total Balance : <%=@contact.balance%>
+      Total Balance : <%=Utility.indian_number @contact.balance%>
    </div>
 </div>
 
+ <% if !flash[:notice].blank?%>
+  <div id='success_' class="alert alert-success">
+       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+       </button>
+       <%=flash[:notice]%>
+  </div>
+  <%end%>
+
 <div id="trs" class="row-fluid">
    <div class="span12" id='contact_report'>
+   <% @contact_id = @contact.id %>
       <h5>Transactions</h5>    
       <%=render :template => 'transactions/_list.erb'%>
    </div>
 </div>
 <div id="trs1" class="row-fluid">
    <div class="span12">
-     <h5>Item Purchased</h5>
+     <h5>Item Purchased</h5> 
+     
       <%=render :template => 'txn_items/list.erb'%>
    </div>
 </div>

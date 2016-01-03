@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+require File.expand_path( '../../config/boot',__FILE__)
+require  File.expand_path( '../../config/environment',__FILE__)
+
+
+
+Contact.all.each{|c|
+
+     trans = Transaction.where("contact_id = ?",c.id).order("id")
+     cbalance = 0
+     trans.each{|t|
+
+       cbalance = cbalance+t.payment_amount + c.starting_balance
+     	if (cbalance  !=  t.contact_balance)
+     		p "TRANS  - "+t.id_to_s+" contact = "+c.first_name
+
+     }
+
+     }
+
+}

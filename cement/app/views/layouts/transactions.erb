@@ -9,7 +9,7 @@
      var search_contacts = [];
      var contact_names = []
     $(document).on('keyup','input.item_numbers', {} ,function(e){
-      var num =  this.id.split("_")[2];
+       var num =  this.id.split("_")[2];
       var price_e = $("#item_price_"+num)[0];
       var number_e = $("#item_number_"+num)[0];
       var regexDecm =  /^[1-9]\d*(\.\d+)?$/;
@@ -25,6 +25,7 @@
 
 
 
+
    function calc_total_value(){
 
        var  i =1;
@@ -36,21 +37,21 @@
             total = total+a;
           }
        });
-       
 
 /*if($("#transaction_other_charges_amount")[0].value != '') {
         total = total+ parseFloat($("#transaction_other_charges_amount")[0].value);
       }
 */
-      if($("#transaction_vehicle_charges")[0].value != '') {
+
+      if( $("#transaction_vehicle_charges")[0] && $("#transaction_vehicle_charges")[0].value != '') {
         total = total+ parseFloat($("#transaction_vehicle_charges")[0].value);
       }
 
-      if($("#transaction_hamaali")[0].value != '') {
+      if($("#transaction_hamaali")[0] && $("#transaction_hamaali")[0].value != '') {
         total = total+ parseFloat($("#transaction_hamaali")[0].value);
       }
       
-      if($("#transaction_discount")[0].value != '') {
+      if( $("#transaction_discount")[0] && $("#transaction_discount")[0].value != '') {
         total = total - parseFloat($("#transaction_discount")[0].value);
       }
 
@@ -87,7 +88,13 @@
 
    }
 
+   function show_other_fields(){
 
+     $("#other_link").hide();
+     $("#vehicle").show();
+     $("#hamaali").show();
+     $("#discount").show();
+   }
 
   </script>
 </head>
@@ -96,6 +103,7 @@
 <div class="container-fluid">
   <div class="row-fluid" style="padding:1px">
     <div class="span12"style="text-align:left" id="items">
+    <br>
           <%=yield%>
     </div>
 
@@ -103,5 +111,6 @@
   </div>
 
 </div>
+
 </body>
 </html>

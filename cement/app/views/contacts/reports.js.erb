@@ -1,6 +1,6 @@
 <%if params[:commit] == 'Print View'%>
  var x=window.open('','_blank','width=1000px,height=600, scrollbars=yes, resizable=yes');
-x.document.open().write("<%=j (render :partial=>'contacts/reports') %>").close();
+x.document.open().write("<%=j (render :partial=>'contacts/print_view') %>").close();
 <%else%>
  $('#contact_report').html("<%=j (render :partial=>'contacts/reports') %>");
 <%end%>

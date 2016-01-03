@@ -54,11 +54,17 @@ class SitesController < ApplicationController
   end  
 
   def rep_txnitems
-
-     @site = Site.find(params[:id])
-     @txn_items = @site.rep_txnitems  
-
+      @site = Site.find(params[:id])
+      @trs = Transaction.where(["site_id = ?",@site.id])
+      @txn_items = @site.rep_txnitems 
   end
+
+  def contact_txnitems
+      @site = Site.find(params[:id])
+      @contact =  Contact.find(params[:contact_id]) 
+      @trs = Transaction.where(["site_id = ? and contact_id = ?",@site.id,params[:contact_id].to_i])
+      @txn_items = @site.rep_txnitems params[:contact_id]
+  end  
 
 
 end

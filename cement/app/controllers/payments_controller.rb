@@ -15,11 +15,14 @@ class PaymentsController < ApplicationController
   
   def new
   	@payment = Payment.new
+    @site_name = ''
   end 	
 
   def create
 
    begin
+    p "PARAMS"
+    p params
       @p = Payment.new(params[:payment])
       params[:payment_rows].each{|key,val|
 
@@ -46,6 +49,7 @@ class PaymentsController < ApplicationController
 
   def edit
   	@payment = Payment.find(params[:id].to_i)
+    @site_name = (@payment.site.blank? ?  "":@payment.site.name)
   end
 
   def update

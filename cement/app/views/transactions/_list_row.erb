@@ -1,23 +1,17 @@
+  <% i = 0 
+      @contact_id ||= '0'
 
-<table class="table zebra-striped  table-condensed" style='font-size:12px;width:80%' align="center">
-  <thead style="background-color:#FE2E9A;">
-    <th class="col-sm-1">Trans#</th>
-    <th>Date</th>
-    <th>Contact</th>
-    <th>Note</th>
-    <th >Item</th>
-    <th>Total</th>
-    <th>Payment</th>
-    <th class="col-sm-1" style="color:#330099">Action</th>
-  </thead>
-  <tbody>
-   <% i = 0
+      if @contact_id.to_i == 0
+        page_url = "rep_txnitems"
+       else
+         page_url = "contact_txnitems"
+       end 
     @trs.each{|c|
      i+= 1 %>
     <%if i%2 == 0%>
-       <tr>
+        <tr id="trans_tr_<%=c.id%>">
     <%else%>
-       <tr class="info">
+       <tr class="info" id="trans_tr_<%=c.id%>">
     <%end%>
     <td><%=c.id%>
     </td>
@@ -25,7 +19,9 @@
     <td><%=link_to c.name_subname, report_page_contact_path(:id => c.contact_id)%>
     </td>
     <td>
-   <%if !c.site.blank? %> Site : <%=link_to c.site.name, rep_txnitems_site_url(:id => c.site.id)%><br><%end%>
+   <%if !c.site.blank? %> 
+          
+         Site : <%=link_to c.site.name, Rails.application.routes.url_helpers.send("#{page_url}_site_path", :id => c.site.id, :contact_id => @contact_id)%><br><%end%>
     <%=c.descri%>
        <% if c.buyback == 1%>
               <br>
@@ -42,12 +38,12 @@
            PAYMENT RECIEVED
          <%end%>
          <%c.payment_rows.each {|p| %>
-            <%=p.pay_type%> : <%if !p.note.blank?%> <%=p.note%>  : <%end%> <%=p.amount%> <br>
+            <%=p.pay_type%> : <%if !p.note.blank?%> <%=p.note%>  : <%end%> <%=Utility.indian_number p.amount%> <br>
          <% }%>
 
       <% else %>
         <%c.txn_items.each{|tx|%>
-         <%=tx.item.name%> &nbsp;&nbsp; <%=tx.number%> &nbsp;*&nbsp;<%=tx.price%> 
+         <%=tx.item.name%> &nbsp;&nbsp; <%=tx.number%> &nbsp;x&nbsp;<%=tx.price%> 
          <br>
         <%}%>
         <%if c.hamaali.to_i > 0%>
@@ -55,21 +51,22 @@
           <br>
         <%end%>
         <%if c.vehicle_charges.to_i > 0%>
-          Vehicle charges &nbsp&nbsp <%=c.vehicle_charges%>
+          Vehicle charges &nbsp&nbsp <%=Utility.indian_number c.vehicle_charges%>
           <br>
         <%end%>
       <%end%>
       <%if c.discount.to_i > 0%>
-        Discount &nbsp&nbsp <%=c.discount%>
+        Discount &nbsp&nbsp <%=Utility.indian_number c.discount%>
       <%end%>
       
       </td>
     <td> <% if c.trans_type != 'payment' %>
-          <%=c.amount%>
+          <% if c.buyback == 1%> - <%end%>
+          <%= Utility.indian_number c.amount%>
         <%end%>
     </td>
     <td>
-       <%=c.payment_amount%></td>
+       <%=  Utility.indian_number c.payment_amount%></td>
     <td>
           <span id ='t1'>
           <% if c.trans_type == 'payment' %>
@@ -84,7 +81,3 @@
       </td>
    </tr>
    <%}%>
-  </tbody>
-
-</table>
-  <hr>

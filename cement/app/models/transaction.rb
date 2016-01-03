@@ -10,14 +10,14 @@ class Transaction < ActiveRecord::Base
  
   belongs_to :contact
   belongs_to :site
-  has_many :txn_items, dependent: :destroy
+  has_many :txn_items
   has_many :payment_rows , dependent: :destroy
 
   before_create :calculate_amount, :calculate_contact_balance, :if => " skip_updator != true"
   before_update :calculate_amount, :rectify_amount, :if => " skip_updator != true"
   after_create  :update_balance_changes, :if => " skip_updator != true"
   after_update  :update_balance_changes, :if => " skip_updator != true"
-  after_destroy :destroy_balance_changes
+  before_destroy :destroy_balance_changes,:destroy_dependent_txitems
 
   scope :payments, -> { where(trans_type: 'payment') }
   
@@ -144,6 +144,13 @@ class Transaction < ActiveRecord::Base
 
   end  
 
+
+  def destroy_dependent_txitems
+     self.txn_items.each{|t|
+      t.destroy
+     }
+  end  
+
   class << self
 
     def by_contact ids, sdate=nil, edate=nil
@@ -166,6 +173,7 @@ class Transaction < ActiveRecord::Base
       txn_arr.each{|t| payment += t.payment_amount.to_f}
       payment
     end  
+    
     def total_amount txn_arr
       amount = 0
       txn_arr.each{|t| 

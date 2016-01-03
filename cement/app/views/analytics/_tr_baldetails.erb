@@ -1,0 +1,27 @@
+<tbody>         
+<%@paybal.each{|r| %>
+              <tr>
+                <td>
+                   <%=link_to r[0] , report_page_contact_path(:id => r[2])%>
+                   <br><span class='greytext'><%=Contact.find(r[2]).contact_number%></span>
+                </td>
+                <td>
+                   <%=Utility.indian_number r[1]%>
+                </td>
+                <td>
+                <%=r[4]%><br>
+                   <%= Utility.indian_number r[3]%>
+                </td>
+                <td>
+                <%=r[6]%><br>
+                   <%= Utility.indian_number r[5]%>
+                   
+
+                </td>
+                <td>
+                   <%=r[7]%>
+
+                </td>
+              </tr>
+            <%}%>
+        </tbody>    

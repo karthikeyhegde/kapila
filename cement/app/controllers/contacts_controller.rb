@@ -3,8 +3,25 @@ class ContactsController < ApplicationController
 respond_to :json, :html
 
  def index
-   @contacts = Contact.order("name,subname")
- end
+
+    ord_column = 'name,subname '
+    ord =  'ASC'
+    if !params[:ord].blank?
+      ord_column =  params[:ord].split('_')[0]
+      ord =  params[:ord].split('_')[1]
+    end 
+    if !params[:condn].blank? || params[:condn] != "all"
+      condn =  " regular = 1 " if params[:condn] == 'regular'
+      condn = " supplier = 1 " if params[:condn] == 'supplier'
+      condn = " regular = 0 "  if params[:condn] == 'nonregular'
+      @contacts = Contact.where(condn).order(ord_column+ord)
+    else 
+      params[:condn] = 'all'
+      @contacts =  Contact.order(ord_column+ord)
+    end  
+  end
+
+   
 
  def show
  end
@@ -117,6 +134,8 @@ respond_to :json, :html
     @trs = @contact.rep_trans 
     @txn_items = @contact.rep_items
     @payments =  @contact.rep_payments
+    p "KK"
+    p flash[:notice]
  end 
 
 
@@ -132,7 +151,7 @@ respond_to :json, :html
    t_date = DateTime.parse(to_date).strftime('%Y-%m-%d %H:%M')
 
    @contact = Contact.find(id)
-   @transactions = Transaction.where('contact_id = ?  and on_date between ? and ?',id,f_date,t_date).order('on_date ')
+   @transactions = Transaction.where('contact_id = ?  and on_date between ? and ?',id,f_date,t_date).order('on_date,created_at')
    
    respond_to do |format|
       format.js {render layout: false}
@@ -148,7 +167,7 @@ respond_to :json, :html
    t_date = DateTime.parse(to_date).strftime('%Y-%m-%d %H:%M')
 
    @contact = Contact.find(id)
-   @transactions = Transaction.where('contact_id = ?  and on_date between ? and ?',id,f_date,t_date).order('on_date ')
+   @transactions = Transaction.where('contact_id = ?  and on_date between ? and ?',id,f_date,t_date).order('on_date,created_at')
  
    
     p = Axlsx::Package.new

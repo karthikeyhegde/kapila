@@ -15,17 +15,17 @@
   
 	    <tr>
 	         <td> Total Amount : </td>
-	         <td> <%=@contact.total_purchase%></td>
+	         <td> <%=Utility.indian_number(@contact.total_purchase)%></td>
 	         <td></td>
 	         <td>Total Payment : </td>
-	         <td><%=@contact.total_payment%></td>
+	         <td><%=Utility.indian_number(@contact.total_payment)%></td>
 	    </tr>
         <tr>
             <td> Baaki/Starting Amount : </td>
-            <td><%=@contact.starting_balance%></td>
+            <td><%=Utility.indian_number(@contact.starting_balance)%></td>
             <td></td>
             <td>Current Balance :</td>
-            <td><%=@contact.balance%></td>
+            <td><%=Utility.indian_number(@contact.balance)%></td>
         </tr>
 
         <%if  params[:from_date] != '2000-01-01' || params[:to_date] != '2100-01-01'%>
@@ -45,12 +45,15 @@
         <%end%> 
     </table>
 <%else%>
+ 
  <h5>Transactions</h5>    
 <%end%>
 
 <table class="table table-striped " style='font-size:12px;width:80%;text-align:left' align="center" rules="rows">
   <thead style="background-color:#FE2E9A;">
+  <% if params[:commit] != 'Print View' %>
     <th class="col-sm-1">Trans#</th>
+   <%end%> 
     <th>Date</th>
     <th>Note</th>
     <th >Item</th>
@@ -67,7 +70,9 @@
     <%else%>
        <tr class="info">
     <%end%>
+    <% if params[:commit] != 'Print View' %>
     <td><%=c.id%></td>
+    <% end %>
     <td><%=c.on_date%></td>
     <td>
      <% if c.trans_type == 'payment'  %>
@@ -79,13 +84,14 @@
          <br>
         <%end%> 
        <%if !c.site.blank? %> Site : <%=link_to c.site.name, rep_txnitems_site_url(:id => c.site.id)%><br><%end%>
-        <%=c.descri%>
-           <% if c.buyback == 1%>
-                  <br>
+       <%if !c.descri.blank? %>
+         <%=c.descri%>
+         <br>
+       <%end%>
+        
+            <% if c.buyback == 1%>
                Items Returned
              <%end%>  
-
-             
     </td>
 
     <td>
@@ -98,30 +104,33 @@
 
       <% else %>
         <%c.txn_items.each{|tx|%>
-         <%=tx.item.name%> &nbsp;&nbsp; <%=tx.number%> &nbsp;*&nbsp;<%=tx.price%> 
+         <%=tx.item.name%> &nbsp;&nbsp; <%=tx.number%> &nbsp;x&nbsp;<%=tx.price%> 
          <br>
         <%}%>
         <%if c.hamaali.to_i > 0%>
-          Hamaali &nbsp&nbsp <%=c.hamaali%>
+          Hamaali &nbsp&nbsp <%=Utility.indian_number(c.hamaali)%>
           <br>
         <%end%>
         <%if c.vehicle_charges.to_i > 0%>
-          Vehicle charges &nbsp&nbsp <%=c.vehicle_charges%>
+          Vehicle charges &nbsp&nbsp <%=Utility.indian_number(c.vehicle_charges)%>
           <br>
         <%end%>
       <%end%>
       <%if c.discount.to_i > 0%>
-        Discount &nbsp&nbsp <%=c.discount%>
+        Discount &nbsp&nbsp <%=Utility.indian_number(c.discount)%>
       <%end%>
       
       </td>
     <td> <% if c.trans_type != 'payment' %>
-          <%=c.amount%>
+         <% if c.buyback == 1%>
+               -
+             <%end%>  
+          <%=Utility.indian_number c.amount%>
         <%end%>
     </td>
-    <td> <%=c.payment_amount%> </td>
-     
-    <td> <%=c.contact_balance%> </td>
+    <td> <%= Utility.indian_number c.payment_amount%> </td>
+
+    <td> <%=Utility.indian_number((c.contact_balance + c.contact.starting_balance))%> </td>
    </tr>
    <%}%>
 
@@ -131,15 +140,14 @@
       <td><%if params[:from_date] != '2000-01-01' and !params[:from_date].blank?%> From <%=params[:from_date]%> <%end%></td>
       <td><%if params[:to_date] != '2100-01-01' and !params[:to_date].blank? %>  Up to <%=params[:to_date]%> <%end%></td>
      <td></td>
-      <td><b><%=Transaction.total_amount @transactions%></b></td>
-      <td><b><%=Transaction.total_payment @transactions%></b></td>
-      <td><b><%=Transaction.total_balance @transactions%></b></td>
+      <td><b><%=Utility.indian_number(Transaction.total_amount @transactions)%></b></td>
+      <td><b><%=Utility.indian_number(Transaction.total_payment @transactions)%></b></td>
+      <td><b><%=Utility.indian_number( (Transaction.total_balance @transactions) + 
+        @transactions[0].contact.starting_balance ) %></b></td>
 
    <tr>
   </tbody>
 
 </table>
 <br>
-<%if params[:commit] != 'Print View'%>
 <hr>
-<%end%>

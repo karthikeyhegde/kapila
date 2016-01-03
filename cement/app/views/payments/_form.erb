@@ -4,6 +4,7 @@
 </div>
 <%= form_for @payment, :remote => true do |f| %>
   
+
     <%if @payment.new_record?%>
 
        <%=render :partial => 'date_and_contact', :locals => {:f => f}%>
