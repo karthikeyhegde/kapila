@@ -10,15 +10,15 @@ class Analytic
   	  ord_str = args[0] || " balance desc"  
   	  user = args[1]  || 'test_user'
 
-  	  str =  " select c.name,c.balance, c.id, "
+  	  str =  " select c.name,c.balance, c.id, c.contact_number, "
       str << "(select payment_amount from transactions where contact_id = c.id and payment_amount != 0 and payment_amount is not null order by on_date desc limit 1 )  last_paymnet_amount, "
       str << "(select on_date  from transactions where contact_id = c.id AND payment_amount != 0 and payment_amount is not null order by on_date desc limit 1 ) as last_payment_date, "
       str << "(select amount from transactions t where contact_id = c.id and (select count(*) from txn_items where transaction_id = t.id) > 0 "
       str << "order by on_date desc limit 1 ) as last_txn_amount, "
       str << "(select on_date from transactions t where contact_id = c.id and (select count(*) from txn_items where transaction_id = t.id) > 0 "
 
-      str << "order by on_date desc limit 1 ) as last_txn_date "
-      str << "from contacts c  where balance > 0 "
+      str << "order by on_date desc limit 1 ) as last_txn_date  "
+      str << "from contacts c where balance < 0 OR balance > 0 "
   
       con =  ActiveRecord::Base.connection
 
@@ -51,7 +51,7 @@ class Analytic
       ord_str = ord || '((datediff(curdate(),last_payment_date) * balance) ) DESC'   
       user = 'test_user'
       con =  ActiveRecord::Base.connection
-      res =  con.execute("SELECT *, if(last_payment_date is null,DATEDIFF(curdate(),'2015-03-31'),DATEDIFF(curdate(),last_payment_date) ) as gone_days from paybal_#{user}  order by #{ord_str}")      
+      res =  con.execute("SELECT *, if(last_payment_date is null, IF (last_txn_date is NULL,(DATEDIFF(curdate(),'2015-03-31')),(DATEDIFF(curdate(),last_txn_date))),DATEDIFF(curdate(),last_payment_date) ) as gone_days from paybal_#{user}  order by #{ord_str}")      
       arr = Analytic.mysql_to_array res
       return arr
 
@@ -70,7 +70,8 @@ class Analytic
         sql << " (@smnt := @smnt + t.amount) as running_amount,  ((@smnt- @pmnt)) as running_balance, t.tl_value "
         sql <<  " from ( select sum(if(tx.recieved != 1, tx.payment_amount * -1, tx.payment_amount)) as payment, "
         sql << "  sum(if(tx.buyback = 1, tx.amount * -1, tx.amount)) as amount, #{tm_val_str}  from transactions tx group by tl_value) t"
-       
+      p "bal trend"
+       p sql
         arr_res = Analytic.mysql_to_array con.execute(sql)
         return arr_res
 
@@ -95,7 +96,7 @@ class Analytic
           select = " YEAR(tx.on_date) as tl_value" 
         else
               # Default Calculation  Monthly by Year
-          select  =  " CONCAT(YEAR(tx.on_date),MONTH(tx.on_date)) as tl_value "
+          select  =  " CONCAT(YEAR(tx.on_date),LPAD(MONTH(tx.on_date), 2, '0')) as tl_value "
       end 
 
         
@@ -151,6 +152,7 @@ class Analytic
 
  
      n_arr << ra
+
    }
 
 
@@ -164,7 +166,8 @@ class Analytic
      rep.first_query_table
      rep.results
      re_arr = Analytic.itemsales_data rep.r_value
-
+      p "KILLL"
+      p rep.headers
      return re_arr,rep
 
    end 

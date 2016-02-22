@@ -17,7 +17,7 @@
     <%end%>
       <td><%=c.on_date%></td>
       <td><%=link_to c.item.name, rep_txnitems_item_url(c.item.id)%></td>
-      <td><%=c.contact.name_subname%></td>
+      <td><%=c.name_subname%></td>
       <td><%=c.numbers%>  <%if !c.nil?  and c.price > 0 %> ( <%=c.price%> )<%end%> </td>
       
     <td>

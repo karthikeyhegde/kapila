@@ -9,8 +9,8 @@ class Contact < ActiveRecord::Base
   has_many :transactions
   has_many :payments
   
-  before_create :assign_balance
-  after_update  :rectify_contact_balance
+  #before_create :assign_balance
+  #after_update  :rectify_contact_balance
 
  # before_update  :rectify_contact_balance
 
@@ -60,7 +60,10 @@ class Contact < ActiveRecord::Base
 
   def total_payment
     t_amount = 0.0
-    self.transactions.each{|p| t_amount += p.payment_amount.to_f}
+    self.transactions.each{|p| 
+      t_amount += p.payment_amount.to_f if p.recieved == 1
+      t_amount -= p.payment_amount.to_f if p.recieved != 1
+    }
     return t_amount
   end  
 

@@ -90,6 +90,7 @@ def assign_stock
 
   end  
 
+
   def self.rep_txnitems id
     item = Item.find(id.to_i)
     txn_items = @item.rep_ixnitems
@@ -101,7 +102,7 @@ def assign_stock
     }
 
   end  
-
+  
 
   def self.color_code i=null
      ccode = ["", #26CEBF",

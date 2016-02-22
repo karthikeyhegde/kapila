@@ -22,10 +22,11 @@ total_payment_till = [] ;
 
 
 <% 
-months = ["Jan","Feb","March","April","May","Jun","Jul","Aug","Sep","Nov","Dec"]
+months = ["","Jan","Feb","March","April","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 @balance_trend.each{|bt| 
-
-   month_no = bt[5][4].to_i - 1
+   
+   mn  = bt[5][4..(bt[5].size-1)]
+   month_no = mn.to_i 
    str = months[month_no]+" "+bt[5][0..3].to_s
  %>
 

@@ -1,4 +1,4 @@
-<div id='block3' class="span10 offset1" style="background-color:#FFFFFF;padding:1%;border:1px solid #CACACA">
+<div id='block3' class="span10 offset1" style="background-color:#FFFFFF;padding:1%;border:1px solid #CACACA;">
     <div class="row-fluid" id='filter_head3' >
            <div class="span12" style="margin-bottom:0px;" >
               <span id="block3_filter_icon" class='block_filter_icon'><i class="fa fa-wrench"></i><i class="fa fa-cog"></i></span>&nbsp;&nbsp;
@@ -7,7 +7,7 @@
             <%=render :partial => 'filter3' %>
     </div>
    <div  id="item_sales_tb" class="row-fluid" >
-     <div id='table_show' class="span12">
+     <div id='table_show' class="span12" >
         <div class="Headers">
              <div id='errors'></div>
               <table id='header_tb' class="table" style='font-size:13px;width:100%;margin-bottom:1px;background-color:#848482;color:#FFFFFF' align="center">
@@ -17,7 +17,7 @@
                   <% 
                       i = 0
                       @itemsales.headers.each {|h| %> 
-
+                              
                            <th id="bld_<%=i+2%>" class='click_header ' style='cursor:pointer;'>
                                <span id="hd_<%=i+2%>"> <%=h[0]%> </span>
                                <span id="shd_<%=i+2%>" class='greytext10' style="font-weight:normal;"><%=h[1]%></span>
@@ -28,7 +28,7 @@
                 </thead>
               </table>
         </div>
-        <div class="Table" style="height:300px;overflow:auto;" id='itemsales_data'>  
+        <div class="Table" style="height:600px;overflow:auto;" id='itemsales_data'>  
             <table id='bal_details_tb' class="table  table-striped " style='font-size:13px;width:100%;margin-bottom:1px;' align="center">
               <%=render :partial => "tr_itmsales" %>
             </table>

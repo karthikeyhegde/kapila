@@ -35,7 +35,7 @@ class AnalyticsController < ApplicationController
        @total_salesnm  += irs[3]
      }
      @report = Report.new
-     @from_date = "1 Apr 2015"
+     @from_date = "1 Jan 2015"
 
      @top_customers =  Analytic.get_customer_sales(10)
      
@@ -103,6 +103,7 @@ class AnalyticsController < ApplicationController
       @report = Report.create_with_params params[:report]
       @its,@itemsales = Analytic.item_sales_filter @report
 
+
       if params[:commit] == "Save as"
          if !params[:id].blank?
              rp = Report.find(params[:id])
@@ -112,8 +113,7 @@ class AnalyticsController < ApplicationController
              @report.save!    
          end 
        end 
-       p "JIJIJI"
-       p @report.grouping_ord
+
       respond_to do |format|
         format.js { render layout: false }
      end  

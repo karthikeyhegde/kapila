@@ -64,7 +64,6 @@ class StockEntriesController < ApplicationController
  end
 
  def remove
-   
    StockEntry.find(params[:id]).destroy
    redirect_to :action => 'index'
  end

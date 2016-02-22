@@ -72,4 +72,11 @@ class ItemsController < ApplicationController
    @summary.each{|s| @all_sum += s['t_sum'].to_f}
  end 
 
+ def stock_entries_list
+    @stock_entries  = StockEntry.list ({:item_id => parmas[:id]})   
+ end
+
+ 
+
+
 end

@@ -58,8 +58,6 @@ class TxnItem < ActiveRecord::Base
      end  
    
      def ui_number
-        p "GFTGHYTRD"
-        p self.transaction.buyback
         self.transaction.buyback == 1 ? (self.number * -1) : self.number
      end  
 

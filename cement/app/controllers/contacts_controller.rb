@@ -15,9 +15,11 @@ respond_to :json, :html
       condn = " supplier = 1 " if params[:condn] == 'supplier'
       condn = " regular = 0 "  if params[:condn] == 'nonregular'
       @contacts = Contact.where(condn).order(ord_column+ord)
+
     else 
       params[:condn] = 'all'
       @contacts =  Contact.order(ord_column+ord)
+      
     end  
   end
 

@@ -170,7 +170,11 @@ class Transaction < ActiveRecord::Base
 
     def total_payment txn_arr
       payment = 0
-      txn_arr.each{|t| payment += t.payment_amount.to_f}
+     txn_arr.each{|t|
+       t.recieved == 0? txn_payment = (t.payment_amount * -1) : txn_payment = t.payment_amount.to_f 
+       payment += txn_payment.to_f
+
+      }
       payment
     end  
     
@@ -178,7 +182,9 @@ class Transaction < ActiveRecord::Base
       amount = 0
       txn_arr.each{|t| 
 
-        amount += t.amount.to_f
+        t.buyback == 1? txn_amount = (t.amount * -1) : txn_amount = t.amount
+        amount += txn_amount.to_f
+
       }
       return amount
     end
@@ -187,14 +193,18 @@ class Transaction < ActiveRecord::Base
       balance = 0
       payment = 0
       txn_arr.each{|t|
-
-       payment += t.payment_amount.to_f
+       t.recieved == 0? txn_payment = (t.payment_amount * -1) : txn_payment = t.payment_amount.to_f 
+       payment += txn_payment.to_f
 
       }
       amount = 0
       txn_arr.each{|t| 
-        amount += t.amount.to_f}
-      amount - payment
+
+        t.buyback == 1? txn_amount = (t.amount * -1) : txn_amount = t.amount
+        amount += txn_amount.to_f
+
+      }
+        amount - payment
     end  
     
 

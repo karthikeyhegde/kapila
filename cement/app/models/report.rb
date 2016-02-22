@@ -325,12 +325,15 @@ p "KI"
               headers << [" #{h[0]} #{h[1]}","#{h[2]} #{h[3]}"]
              }
                  
-           else
-             headers = header_arr
+           when "Yearly"
+            header_arr.each{|h|
+              headers << [h,'']
+             }
+
           end     
       end 
          
-      p "Headers"
+      p "Headers --"
       p headers
       return headers
   end  
@@ -403,6 +406,9 @@ p "KI"
 =end
    
    @headers =  table_headers column_names[1]
+
+   p "HEDWRS 22"
+   p @headers
    @gord_column_names = column_names
 
    f_cn_name = select_cn[0].split('_')[0]+"_name"  if select_cn[0].include?('_id')
