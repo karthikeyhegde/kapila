@@ -86,6 +86,9 @@ Cement::Application.routes.draw do
 
     post 'quick_update' , :on => :collection
     post 'all_edit' , :on => :collection
+    post 'save_filter', :on => :collection
+    post 'filter', :on => :collection
+    get  'show_filter', :on => :collection 
     
   end
 
