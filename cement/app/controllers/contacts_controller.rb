@@ -133,6 +133,7 @@ respond_to :json, :html
 
  def report_page
     @contact = Contact.find(params[:id])
+    @report = Report.new
     @trs = @contact.rep_trans 
     @txn_items = @contact.rep_items
     @payments =  @contact.rep_payments
@@ -142,6 +143,7 @@ respond_to :json, :html
 
 
  def reports
+   @reports = Report.new
    if params[:commit] == 'Get Excel'
      redirect_to :action => 'excel_export',  :from_date => params[:from_date], :to_date => params[:to_date], :id => params[:id]
      return
@@ -160,6 +162,57 @@ respond_to :json, :html
    end 
 
  end 
+
+
+
+ def filter
+    @filter = true
+    @report =  Report.create_with_params params[:report]
+    if params[:report].blank? and !params[:id].blank? 
+       @report = Report.find(params[:id])
+     end 
+   @contact = Contact.find(params[:contact_id])
+   @trs = @transactions = @report.contact_filter 
+   p "FOLTER SIZE"
+   p  @transactions.size()
+   if params[:commit] == "Save as"
+       if !params[:id].blank?
+           rp = Report.find(params[:id])
+           rp.report_type = 'ALL CONTACT'  if params[:all_contacts] == 'true'  
+           rp.update_attributes!(params[:report])
+
+        else
+           @report.tag="contact_filter"
+           @report.report_type = 'ALL CONTACT' if params[:all_contacts] == 'true'
+           @report.tag = 'contact_filter'
+           @report.is_saved = true  
+           @report.save!    
+       end 
+     end 
+   respond_to do |format|
+      format.js {render 'reports', layout: false}
+   end 
+end
+ 
+ def save_filter
+ end 
+
+ def show_filter
+  @filter = true
+   @report = Report.find(params[:id].to_i)
+   @trs = @transactions = @report.contact_filter 
+   @contact =  Contact.find(params[:contact_id].to_i)
+   p "FOLTER SIZE"
+   p  @transactions.size
+   @transactions.each{|a|
+    p "-- #{a.id}+ -- #{a.contact_id}"
+   }
+   respond_to do |format|
+      format.js {render 'reports', layout: false}
+   end
+ end 
+
+
 
  def excel_export
   id = params[:id]

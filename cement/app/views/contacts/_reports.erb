@@ -46,9 +46,12 @@
     </table>
 <%else%>
  
- <h5>Transactions</h5>    
+ <span class='h5'>Transactions</span>  <span class='subinfo'><%=space(2)%> <%if @filter == true%> Filter Applied: <%=@report.name%><%end%></span>
+    
 <%end%>
-
+<%if @transactions.size < 1%>
+   NO Transactions Found !
+<%else%>
 <table class="table table-striped " style='font-size:12px;width:80%;text-align:left' align="center" rules="rows">
   <thead style="background-color:#FE2E9A;">
   <% if params[:commit] != 'Print View' %>
@@ -149,5 +152,6 @@
   </tbody>
 
 </table>
+<%end%>
 <br>
 <hr>

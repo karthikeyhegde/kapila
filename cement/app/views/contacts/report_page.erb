@@ -1,6 +1,8 @@
-
+<br>
 <div id='criteria' class="row-fluid" style="line-height:6px;">  
+
 <div class='span7'>
+<br>
   <span  style="font-size:18px;color:#330099"><%=@contact.name%></span>
      &nbsp;&nbsp; Ph: <%=@contact.contact_number%> 
      <%if !@contact.address.blank? %>
@@ -12,15 +14,20 @@
 
    <div class="span5 pull-right" >
    <br>
+       
        <%=form_tag reports_contact_path(:id=>@contact.id), :remote => true do%>
-        <%=text_field_tag :from_date, '', {class: 'report-date', style:'height:20px;width:120px;', :placeholder => "From Date"}%>
 
+        <%=text_field_tag :from_date, '', {class: 'report-date', style:'height:20px;width:120px;', :placeholder => "From Date"}%>
        <span style="font-size:18px;"> - </span>
         <%=text_field_tag :to_date, '', {class: 'report-date', style:'height:20px;width:120px;', :placeholder => "To Date"}%>
           <%=submit_tag "Show" , {class:'btn btn-primary btn-xs', style:'vertical-align: top;'}%>
           <%=submit_tag "Print View" , {class:'btn btn-warning btn-xs', style:'vertical-align: top;'} %>     
+          <button id='filter_button' type="button" class="btn " style="vertical-align:top;" onclick='$("#mn_filter_cnt").toggle();$("#filter_button").toggleClass("btn-info");'> <i id='flt_icon' class="fa fa-gears " > </i></button>
        <%end%>
    </div>
+</div>
+<div  id='mn_filter_cnt' style="<%if @report.id.blank? %>display:none;<%end%>">
+  <%=render :partial => 'contacts_filter'%>
 </div>
 
 <div id="amnt" class="row-fluid" >

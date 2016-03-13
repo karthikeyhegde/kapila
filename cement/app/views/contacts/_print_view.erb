@@ -95,9 +95,22 @@
         <%end%>
     </td>
     <td> <%= Utility.indian_number c.payment_amount%> </td>
-    <td> <%=Utility.indian_number((c.contact_balance + c.contact.starting_balance))%> </td>
+    <td>
+     <%if @filter != true %>
+     <%=Utility.indian_number((c.contact_balance + c.contact.starting_balance))%> 
+     <%end%>
+     </td>
    </tr>
    <%}%>
+   <%if @filter == true%>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><%=Transaction.total_amount @transactions%></td>
+
+      </tr>
+   <%end%>
 
    
   </tbody>

@@ -62,6 +62,7 @@ class ItemsController < ApplicationController
     @contacts = Contact.where(" LOWER (name) LIKE  LOWER (?)  OR LOWER (subname)  LIKE LOWER (?) OR LOWER (place) LIKE LOWER (?) OR LOWER (contact_type) LIKE LOWER (?)",ssearch,ssearch,ssearch,ssearch)
     @items = Item.where(" LOWER (name)  LIKE LOWER(?)",ssearch)
     @sites = Site.where(" LOWER (name) LIKE LOWER (?) OR LOWER (place) LIKE LOWER (?) ",ssearch,ssearch )
+    @trs = @transaction = Transaction.where('id = ?',params[:search].to_i)
  end 
 
 

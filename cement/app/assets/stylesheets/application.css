@@ -17,6 +17,7 @@
  *= require jquery.ui.autocomplete
  *= require select2
  *= require select2-bootstrap
+ *= require font-awesome
  */
 
 
@@ -125,6 +126,12 @@ table.s-table {
   font-size: 11px;
 }
 
+.subinfo{
+  color :#004d99;
+  font-size: 11px;
+  font-weight: bold;
+
+}
 .sborder.table.td { border-bottom: 1px solid #000 }
 
 
@@ -389,9 +396,9 @@ cursor:pointer;
   background-color: rgba(71,163,218,0.96);
   transition: all 0.2s ease;
   //border-bottom: 2px solid #0041C2;
-
-
 }
+
+
 .menu-top-hide{
     position: fixed;
     top: -260px;
@@ -412,6 +419,8 @@ cursor:pointer;
     transition-delay: 0;    
 
 }
+
+
 
 .mn-hd{
 
@@ -451,4 +460,36 @@ font-size:17px !important;}
   padding-top:20px;
   font-size:26px;
 }
+
+
+#mn_filter_cnt{
+  width: 98%;
+  left: 1%;
+  background-color: rgba(0,0,0,0.1);
+  border-bottom: 2px solid #0041C2;
+}
+
+
+.menu-flt-top-hide{
+    position: fixed;
+    top: -160px;
+    transition-property: down;
+    transition-duration: 0.2s;
+    transition-timing: ease;
+    transition-delay: 0;
+    
+
+}
+
+.menu-flt-top-show{
+
+    top: 40px;
+    transition-property: up;
+    transition-duration: 0.5s;
+    transition-timing: ease;
+    transition-delay: 0;    
+
+}
+
+
 

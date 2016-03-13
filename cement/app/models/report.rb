@@ -62,10 +62,9 @@ p "KI"
   end	
 
 
-
-  def conditional_query
-
-      if !dynamic_date_value.blank?
+  def date_conditions
+     date_str = ''
+    if !dynamic_date_value.blank?
         date_str =  dynamic_dates(number_of,dynamic_date_value)
       else
        fdate =  from_date.blank? ? '2000-01-01' : from_date.to_s(:db) 
@@ -74,16 +73,22 @@ p "KI"
        @show_to_date = tdate
        date_str  = " and on_date  between '"+fdate+"' and '"+tdate+"'"  
       end   
+      return date_str
+  end  
 
+
+  def filter_conditions
+      where_in_condition = ""
+      where_in_condition << " and it.id in ( #{item_ids}) " if !item_ids.blank?
+      where_in_condition << " and tx.contact_id in (#{contact_ids})" if !contact_ids.blank?
+      where_in_condition << " and tx.site_id in (#{site_ids})" if !site_ids.blank?
+      return where_in_condition
+  end  
+
+  def from_and_where_conditions
       itm_arr = item_ids
       ct_arr = contact_ids
       st_arr = site_ids
-  
-      
-      where_in_condition = ""
-      where_in_condition << " and it.id in ( #{itm_arr}) " if !itm_arr.blank?
-      where_in_condition << " and tx.contact_id in (#{ct_arr})" if !ct_arr.blank?
-      where_in_condition << " and tx.site_id in (#{st_arr})" if !st_arr.blank?
  
       from_str = " from txn_items ti, transactions tx "
       where_str = " ti.transaction_id = tx.id "
@@ -104,7 +109,13 @@ p "KI"
         where_str << " and tx.site_id = st.id "
       end
 
+      return from_str, where_str + filter_conditions + date_conditions
+  end  
 
+
+  def conditional_query
+
+      date_str = date_conditions
       timeline_select_str , @timeline_group_str = get_timeline_values
       groupby_str = ""
       i = 0
@@ -119,9 +130,10 @@ p "KI"
            i = 1
       }
 
+      from_str, where_condn = from_and_where_conditions
       query_str = ""
       query_str = (get_select_query) + timeline_select_str
-      query_str << from_str + " WHERE " + where_str + where_in_condition + date_str
+      query_str << from_str + " WHERE " + where_condn
       query_str << " group by "+groupby_str
       p "k"
       p query_str
@@ -446,6 +458,24 @@ p "KI"
 
   
 
+  def contact_filter
+    
+      sql_str = "SELECT tx.* FROM transactions tx "
+      fm_c = ''
+      where_in_condition = " where 1=1 "
+      if !item_ids.blank?
+       where_in_condition << " and tx.id = tx_itm.transaction_id and tx_itm.item_id in ( #{item_ids}) " 
+       fm_c = ' , txn_items tx_itm '
+      end 
+      where_in_condition << " and tx.contact_id in (#{contact_ids})" if !contact_ids.blank?
+      where_in_condition << " and tx.site_id in (#{site_ids})" if !site_ids.blank?
+
+      sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date,tx.created_at'
+p "SQL STR"
+p sql_str
+      return Transaction.find_by_sql(sql_str)
+
+  end  
   
 
 end
