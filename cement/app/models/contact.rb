@@ -115,6 +115,18 @@ class Contact < ActiveRecord::Base
      Payment.where("contact_id =? ", self.id).order("on_date DESC")
   end  
 
+  def aggr_items
+     sql =  "SELECT itm.id,itm.name,sum(txn.number) as sum_number, sum(txn.amount) as sum_amount from items itm, txn_items txn "
+     sql <<  " where txn.item_id = itm.id and txn.contact_id = #{self.id} group by itm.id"
+     Item.find_by_sql(sql)
+  end
+
+  def filter_aggr_items
+      sql =  "SELECT itm.id,itm.name,sum(txn.number) as number, sum(txn.amount) from items itm, txn_items txn, transactions tx "
+      sql <<  " where tx.id= txn.transaction_id and txn.item_id = itm.id and txn.contact_id = #{self.id} group by itm.id"
+     
+
+  end  
 
   def self.picklist
      c_arr = []

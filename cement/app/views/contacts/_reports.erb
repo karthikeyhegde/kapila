@@ -44,14 +44,15 @@
         </tr>   
         <%end%> 
     </table>
-<%else%>
- 
- <span class='h5'>Transactions</span>  <span class='subinfo'><%=space(2)%> <%if @filter == true%> Filter Applied: <%=@report.name%><%end%></span>
-    
+<%else%>   
 <%end%>
 <%if @transactions.size < 1%>
    NO Transactions Found !
 <%else%>
+<%if @filter == true %>
+  <div class="subinfo" style="padding-left:10em;"> Filter Applied : <%=@report.name%>
+  <br></div>
+<%end%>
 <table class="table table-striped " style='font-size:12px;width:80%;text-align:left' align="center" rules="rows">
   <thead style="background-color:#FE2E9A;">
   <% if params[:commit] != 'Print View' %>
@@ -74,7 +75,7 @@
        <tr class="info">
     <%end%>
     <% if params[:commit] != 'Print View' %>
-    <td><%=c.id%></td>
+    <td><%=link_to c.id, edit_transaction_url(c.id)%></td>
     <% end %>
     <td><%=c.on_date%></td>
     <td>
@@ -145,8 +146,8 @@
      <td></td>
       <td><b><%=Utility.indian_number(Transaction.total_amount @transactions)%></b></td>
       <td><b><%=Utility.indian_number(Transaction.total_payment @transactions)%></b></td>
-      <td><b><%=Utility.indian_number( (Transaction.total_balance @transactions) + 
-        @transactions[0].contact.starting_balance ) %></b></td>
+      <td><%if !@filter %><b><%=Utility.indian_number( (Transaction.total_balance @transactions) + 
+        @transactions[0].contact.starting_balance ) %></b><%end%></td>
 
    <tr>
   </tbody>

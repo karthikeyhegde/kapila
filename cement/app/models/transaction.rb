@@ -25,7 +25,7 @@ class Transaction < ActiveRecord::Base
   def all_validation
     errors.add(:Customer, "Costumer  cannot be blank") if contact_id.blank?
     errors.add( :Date, " Date cannot be blank") if on_date.blank?
-    errors.add( :Items, " Enter value for any one of the fields , items/payment amount/hamaali/vehical charges/discount ") if ( txn_items.blank? || txn_items[0].item_id == 0) and payment_amount.to_i == 0 and amount.to_i == 0 and discount.to_i == 0 and hamaali.to_i == 0
+    errors.add( :Items, " Enter value for any one of the fields , items/payment amount/hamaali/vehical charges/discount ") if ( txn_items.blank? || txn_items[0].item_id == 0) and payment_amount.to_i == 0 and amount.to_i == 0 and discount.to_i == 0 and hamaali.to_i == 0 and vehicle_charges.to_i == 0
 
     txn_items.each{|a|
      errors.add(:Item, "Select an item  to provide value") if a.number.to_i != 0 and a.item.blank?

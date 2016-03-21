@@ -1,6 +1,4 @@
 
-
-   <hr style="margin:0px;">
     <div class="row-fluid"  id='contact_filter_block'  style="font-size:12px;margin:3px;">
       
        <div id='' class="span6" style="margin:4px;border-right: 2px solid #FFF;">
@@ -11,6 +9,7 @@
                <span style='font-size:15px;font-weight:bold;'><i class="fa fa-filter fa-lg" style="color:#806517"></i><%=space(2)%>Filter</span> 
                  <br><br>
                  <%=hidden_field_tag('contact_id', @contact.id)%>
+                 <%=hidden_field_tag('show_val', @show_val)%>
                  <%=f.hidden_field(:contact_ids, :multiple => true, :value => @contact.id)%>
                 <span> Custom Fixed Date</span>
                  <br>
@@ -60,11 +59,11 @@
         <hr>
 
           <%Report.where("tag = 'contact_filter' and (contact_ids = '#{@contact.id}' or report_type = 'ALL CONTACT')").each{|a| %>
-            <%=a.name%> <%=space(2)%> <%=link_to show_filter_contacts_path(:id => a.id,:commit => 'Show Report',:contact_id => @contact.id),remote: 'true' , class:"label label-success" do %>
-             <i class="fa fa-eye fa-lg" ></i><%end%>
+            <%=a.name%> <%=space(2)%> <%=link_to filter_contacts_path(:id => a.id,:commit => 'Show Report',:contact_id => @contact.id,:show_val => @show_val),remote: 'true' , class:"label", :method => :post do %>
+             <i class="fa fa-eye fa-sm" ></i><%end%>
             </span>
-                        <%=space(2)%><span class="label label-warning"><i class="icon-print fa-lg" ></i></span>
-
+                        <%=space(1)%>
+                        <%=link_to filter_contacts_path(:id => a.id,:commit => 'Print View',:contact_id => @contact.id,:show_val => @show_val),remote: 'true' , class:"label",:method => :post do %><i class="icon-print fa-lg" ></i><%end%>
             <br>
              
           <%}%>

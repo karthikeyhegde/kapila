@@ -1,0 +1,22 @@
+
+
+    <table class="" style='font-size:14px;width:90%;text-align:left;' align="center">
+        <thead></thead>
+        <tr>
+         <td> <b> <%=@contact.name%></b></td>
+         <td> Ph: <%=@contact.contact_number%></td>
+         <td>
+              <%if !@contact.address.blank? %>
+                Details : <%=@contact.address %>
+              <%end%>
+         </td>       
+        </tr>
+  
+	   
+        <tr>
+            <td>Balance : &nbsp;&nbsp; <%=Utility.indian_number(@contact.balance)%></td>
+            <td></td>
+        </tr>
+
+       
+    </table>

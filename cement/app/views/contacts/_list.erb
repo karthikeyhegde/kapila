@@ -12,6 +12,7 @@
 <table class="table table-striped " style="font-size:12px;width:80%;" align="center">
   <thead style="color:#FFF;background-color:#488AC7;">
     <th>Contact</th>
+    <th>View</th>
     <th>Regular</th>
     <th>Supplier</th>
     <th>Balance</th>
@@ -35,6 +36,24 @@
         <%=c.subname%>  <span class="greytext"><%=c.contact_type%> <%=c.place%></span>
 
      </td>
+     <td>
+      <%=link_to report_page_contact_path(:id => c.id, :show_val => 'trs') do %>
+        <i class="icon-truck fa-lg" ></i>
+      <%end%><%=space(2)%>
+      <%=link_to  report_page_contact_path(:id => c.id, :show_val => 'itms') do %>
+        <i class="fa fa-shopping-cart fa-lg" ></i>
+      <%end%><%=space(2)%>
+      <%=link_to  report_page_contact_path(:id => c.id, :show_val => 'pays') do %>
+        <i class="icon-suitcase fa-lg"></i>
+      <%end%><%=space(2)%>
+      <%if c.supplier == 1%>
+             <%=link_to  report_page_contact_path(:id => c.id, :show_val => 'stcks') do %>
+        <i class="fa fa-cubes fa-lg"></i>
+      <%end%>
+      <%end%>
+
+     </td>
+
      <td><%if c.regular == 1%>&#10003<%else%>&#10007<%end%></td>
      <td><%if c.supplier == 1%>&#10003<%else%>&#10007<%end%></td>
      <td><%=Utility.indian_number(c.balance)%></td>

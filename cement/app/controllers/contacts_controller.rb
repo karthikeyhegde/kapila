@@ -125,19 +125,35 @@ respond_to :json, :html
 
 
  def window_list
-   @contacts = Contact.order("name,subname")
+   p "PARMS"
+   p params
+   if params[:type] == 'stock'
+     @contacts = Contact.where("supplier = true").order("name,subname") 
+   else
+     @contacts = Contact.order("name,subname")
+   end    
    respond_to do |format|
       format.js {render layout: false}
    end 
  end 
 
  def report_page
+  p "HERES"
+    @show_val =  params[:show_val].blank? ? 'trs' : params[:show_val]
+    p "SHOW VAL"
+    p params[:show_val]
+    p @show_val
     @contact = Contact.find(params[:id])
+
     @report = Report.new
-    @trs = @contact.rep_trans 
-    @txn_items = @contact.rep_items
-    @payments =  @contact.rep_payments
-    p "KK"
+    @transactions = @trs = @contact.rep_trans  if @show_val == 'trs'
+    if @show_val == 'itms'
+       @txn_items = @contact.rep_items
+       p "@TXN ITM"
+       p @txn_items
+       @item_aggr = @contact.aggr_items
+    end  
+    @payments =  @contact.rep_payments if @show_val == 'pays'
     p flash[:notice]
  end 
 
@@ -167,14 +183,23 @@ respond_to :json, :html
 
  def filter
     @filter = true
-    @report =  Report.create_with_params params[:report]
+    @report =  Report.create_with_params params[:report] if params[:id].blank? 
     if params[:report].blank? and !params[:id].blank? 
        @report = Report.find(params[:id])
      end 
    @contact = Contact.find(params[:contact_id])
-   @trs = @transactions = @report.contact_filter 
-   p "FOLTER SIZE"
-   p  @transactions.size()
+   @show_val =  params[:show_val].blank? ? 'trs' : params[:show_val]
+    p "SHOW VAL"
+    p @show_val
+   case @show_val
+   when 'itms'
+       @txn_items , @item_aggr = @report.item_contact_filter
+   when 'pays'
+       @payments = @report.payment_contact_filter 
+   else       
+     @trs = @transactions = @report.contact_filter
+   end  
+
    if params[:commit] == "Save as"
        if !params[:id].blank?
            rp = Report.find(params[:id])
@@ -190,7 +215,9 @@ respond_to :json, :html
        end 
      end 
    respond_to do |format|
-      format.js {render 'reports', layout: false}
+      format.js {render 'reports', layout: false} if @show_val == 'trs'
+      format.js { render 'item_reports' ,layout: false} if @show_val == 'itms'
+      format.js { render 'payment_reports' ,layout: false} if @show_val == 'pays'
    end 
 end
  
@@ -198,7 +225,7 @@ end
  end 
 
  def show_filter
-  @filter = true
+   @filter = true
    @report = Report.find(params[:id].to_i)
    @trs = @transactions = @report.contact_filter 
    @contact =  Contact.find(params[:contact_id].to_i)

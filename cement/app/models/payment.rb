@@ -38,6 +38,7 @@ class  Payment < Transaction
     return str
   end	
 
+   
   def name_subname
   	return (contact.blank? ? "":contact.name_subname)
   end	

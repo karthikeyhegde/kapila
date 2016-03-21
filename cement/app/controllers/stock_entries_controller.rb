@@ -29,7 +29,7 @@ class StockEntriesController < ApplicationController
 
  def new
   @stock_entry = StockEntry.new
-  @cont = Contact.all_conts
+  @cont = Contact.where('supplier = 1')
   @form_method = 'post'
  end
 
@@ -67,5 +67,14 @@ class StockEntriesController < ApplicationController
    StockEntry.find(params[:id]).destroy
    redirect_to :action => 'index'
  end
+
+ def contact_stock
+   @stock_entries = StockEntry.where("contact_id = ?",params[:id].to_i)
+   @contact = Contact.find(params[:id].to_i)
+   @show_val = 'stks'
+   @report = Report.new()
+   render :template => 'contacts/report_page.erb'
+
+ end 
 
 end	

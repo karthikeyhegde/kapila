@@ -106,6 +106,7 @@ Cement::Application.routes.draw do
     post 'pagination', :on => :collection
     get  'quick_add_form', :on => :collection
     post 'quick_add', :on => :collection
+    get  'contact_stock', :on => :member
   end
 
   resources :sites do

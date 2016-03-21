@@ -21,8 +21,7 @@ class PaymentsController < ApplicationController
   def create
 
    begin
-    p "PARAMS"
-    p params
+
       @p = Payment.new(params[:payment])
       params[:payment_rows].each{|key,val|
 
@@ -34,7 +33,9 @@ class PaymentsController < ApplicationController
       @p.save!
       flash[:success] = "Payment Added Successfully"
       @payments = Payment.all
-      render js: "window.location.pathname='#{transactions_path}'"
+      #render js: "window.location.pathname='#{transactions_path}'"
+      url = report_page_contact_path(:id => @trans.contact_id)
+      render js: "window.location.pathname='#{url}'"
    
    rescue Exception => e
      @trans = @p

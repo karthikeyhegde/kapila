@@ -471,11 +471,49 @@ p "KI"
       where_in_condition << " and tx.site_id in (#{site_ids})" if !site_ids.blank?
 
       sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date,tx.created_at'
-p "SQL STR"
-p sql_str
+
       return Transaction.find_by_sql(sql_str)
 
   end  
   
+  def item_contact_filter
+
+      sql_str = "SELECT tx_itm.*,tx.on_date FROM transactions tx , txn_items tx_itm , items itm "
+      fm_c = ''
+      where_in_condition = " where tx.id = tx_itm.transaction_id  and itm.id = tx_itm.item_id "
+      if !item_ids.blank?
+       where_in_condition << " and tx_itm.item_id in ( #{item_ids}) " 
+      end 
+
+      where_in_condition << " and tx.contact_id in (#{contact_ids})" if !contact_ids.blank?
+      where_in_condition << " and tx.site_id in (#{site_ids})" if !site_ids.blank?
+
+      sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date,tx.created_at'
+      p "SQL STR"
+      p sql_str
+
+      grouping_sql =" SELECT itm.id,itm.name, SUM(number) as sum_number, SUM(tx_itm.amount) as sum_amount FROM transactions tx , txn_items tx_itm, items itm  "
+      grouping_sql += where_in_condition+date_conditions+" group by itm.id order by itm.name"
+      p "KLKLKL"
+      p  grouping_sql
+      return TxnItem.find_by_sql(sql_str), Item.find_by_sql(grouping_sql)
+
+  end  
+
+  def payment_contact_filter
+      sql_str = "SELECT tx.* FROM transactions tx "
+      fm_c = ''
+      where_in_condition = " where 1=1 "
+      if !item_ids.blank?
+       where_in_condition << " and tx.id = tx_itm.transaction_id and tx_itm.item_id in ( #{item_ids}) " 
+       fm_c = ' , txn_items tx_itm '
+      end 
+      where_in_condition << " and tx.contact_id in (#{contact_ids})" if !contact_ids.blank?
+      where_in_condition << " and tx.site_id in (#{site_ids})" if !site_ids.blank?
+
+      sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date,tx.created_at'
+      return Payment.find_by_sql(sql_str)
+
+  end  
 
 end

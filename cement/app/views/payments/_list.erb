@@ -1,11 +1,10 @@
 
-
+<% sum = 0 %>
 <table class="table zebra-striped table-condensed" style='font-size:12px;width:80%' align="center">
-  <thead style="background-color:#C0C0C0;">
+  <thead style="background-color:#ff9999;">
     <th>Payment#</th>
     <th>Date</th>    
-    <th>Pay Type</th>
-    <th>Note</th>
+    <th>Details</th>
     <th>Contact</th>
     <th>Amount</th>
     <th>Account Balance</th>
@@ -14,7 +13,11 @@
   <tbody>
    <% i = 0
     @payments.each{|c|
-     i+= 1 %>
+     i+= 1
+
+     sum += c.payment_amount if c.recieved == 1
+     sum -= c.payment_amount if c.recieved != 1
+      %>
     <%if i%2 == 0%>
        <tr>
     <%else%>
@@ -24,13 +27,13 @@
     <td><%=c.id%></td>
     <td><%=c.on_date%></td>
     <td><%c.payment_rows.each {|p| %>
+
        <%=p.pay_type%> : <%if !p.note.blank?%> <%=p.note%>  : <%end%> <%=p.amount%> <br>
      <% }%>
-     <% if ( c.discount.to_i > 0)  %>Discount : <%=c.discount%> <%end%></td>
-    <td><%=c.payment_note%></td>
+     <% if ( c.discount.to_i > 0)  %>Discount : <%=c.discount%><br> <%end%><%=c.payment_note%></td>
     <td><%=c.tofrom_contact%></td>
-    <td><%=c.payment_amount%></td>
-    <td><%=c.contact_balance%></td>
+    <td><%if c.recieved != 1%> -<%end%><%=Utility.indian_number c.payment_amount %></td>
+    <td><%=Utility.indian_number (c.contact_balance + c.contact.starting_balance)%></td>
     <td>
           <span id ='t1'>
           <%=link_to "Edit", edit_payment_url(c.id), :class=>"label label-info"%><%=space(5).html_safe%>
@@ -41,6 +44,14 @@
       </td>
    </tr>
    <%}%>
+   <tr class ='success'><td></td>
+    <td><b>Total </b></td>
+    <td><b><%=@payments.size%> Payments </b></td>
+    <td></td>
+    <td><b><%= Utility.indian_number sum%></b></td>
+    <td></td>
+    <td></td>
+    </tr>
   </tbody>
 
 </table>
