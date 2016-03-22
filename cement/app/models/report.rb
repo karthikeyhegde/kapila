@@ -470,7 +470,7 @@ p "KI"
       where_in_condition << " and tx.contact_id in (#{contact_ids})" if !contact_ids.blank?
       where_in_condition << " and tx.site_id in (#{site_ids})" if !site_ids.blank?
 
-      sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date,tx.created_at'
+      sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date desc,tx.created_at desc'
 
       return Transaction.find_by_sql(sql_str)
 
@@ -488,7 +488,7 @@ p "KI"
       where_in_condition << " and tx.contact_id in (#{contact_ids})" if !contact_ids.blank?
       where_in_condition << " and tx.site_id in (#{site_ids})" if !site_ids.blank?
 
-      sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date,tx.created_at'
+      sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date desc, id ASC'
       p "SQL STR"
       p sql_str
 
@@ -503,7 +503,7 @@ p "KI"
   def payment_contact_filter
       sql_str = "SELECT tx.* FROM transactions tx "
       fm_c = ''
-      where_in_condition = " where 1=1 "
+      where_in_condition = " where tx.trans_type = 'payment' "
       if !item_ids.blank?
        where_in_condition << " and tx.id = tx_itm.transaction_id and tx_itm.item_id in ( #{item_ids}) " 
        fm_c = ' , txn_items tx_itm '
@@ -511,7 +511,7 @@ p "KI"
       where_in_condition << " and tx.contact_id in (#{contact_ids})" if !contact_ids.blank?
       where_in_condition << " and tx.site_id in (#{site_ids})" if !site_ids.blank?
 
-      sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date,tx.created_at'
+      sql_str += fm_c+where_in_condition+ date_conditions+' order by  on_date desc,tx.created_at desc'
       return Payment.find_by_sql(sql_str)
 
   end  

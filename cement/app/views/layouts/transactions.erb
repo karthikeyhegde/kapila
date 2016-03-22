@@ -16,7 +16,7 @@
       var regexNum =   /[0-9 -()+]+$/ ;
      
       if(price_e.value.match(regexDecm) && number_e.value.match(regexNum)){
-        $("#item_val_"+num).html((parseFloat(price_e.value) * parseFloat(number_e.value)).toFixed(2));
+        $("#item_val_"+num).html(indianFormat((parseFloat(price_e.value) * parseFloat(number_e.value)).toFixed(2)));
       }else{ $("#item_val_"+num).html('0') }
       
       calc_total_value();
@@ -33,7 +33,8 @@
 
        $(".item_total").each(function(){
           if($(this).html() != ''){
-            var a = parseFloat($(this).html());
+            var st = $(this).html().replace(',','');
+            var a = parseFloat(st);
             total = total+a;
           }
        });
@@ -56,7 +57,7 @@
       }
 
        ptotal = parseFloat(total).toFixed(2);
-      $("#items_total_value").html(ptotal);    
+      $("#items_total_value").html(indianFormat(ptotal));    
 
    }
 

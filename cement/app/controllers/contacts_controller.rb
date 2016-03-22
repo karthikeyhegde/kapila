@@ -171,8 +171,7 @@ respond_to :json, :html
    t_date = DateTime.parse(to_date).strftime('%Y-%m-%d %H:%M')
 
    @contact = Contact.find(id)
-   @transactions = Transaction.where('contact_id = ?  and on_date between ? and ?',id,f_date,t_date).order('on_date,created_at')
-   
+   @transactions = Transaction.where('contact_id = ?  and on_date between ? and ?',id,f_date,t_date).order('on_date desc,created_at ASC ')
    respond_to do |format|
       format.js {render layout: false}
    end 

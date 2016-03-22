@@ -104,7 +104,7 @@ class Contact < ActiveRecord::Base
  
 
   def rep_trans sdate=nil, edate=nil
-     Transaction.where("contact_id = ?  ",self.id).order("on_date DESC")
+     Transaction.where("contact_id = ?  ",self.id).order("on_date DESC , created_at desc")
   end  
 
   def rep_items sdate=nil, edate=nil
@@ -112,7 +112,7 @@ class Contact < ActiveRecord::Base
   end  
  
   def rep_payments sdate=nil, edate=nil 
-     Payment.where("contact_id =? ", self.id).order("on_date DESC")
+     Payment.where("contact_id =? ", self.id).order("on_date DESC, created_at desc")
   end  
 
   def aggr_items

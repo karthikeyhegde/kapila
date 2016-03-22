@@ -28,7 +28,7 @@ class TxnItem < ActiveRecord::Base
     end  
 
      def stock_entry_on_update
-       item_numbers =  (self.tbuyback_now == 1?  (self.number * -1) :self.number)
+       item_numbers =  (self.buyback_now == 1?  (self.number * -1) :self.number)
        item_numbers_was = (self.buyback_was == 1?  (self.number_was * -1) :self.number_was ) 
 
        diff = item_numbers - item_numbers_was

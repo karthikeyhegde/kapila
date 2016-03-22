@@ -35,7 +35,7 @@
 
        if($("#discount_amount")[0].value != '') {
         total = total + parseFloat($("#discount_amount")[0].value);
-         $("#total_amnt").html(parseFloat(total).toFixed(2));
+         $("#total_amnt").html(indianFormat(parseFloat(total).toFixed(2)) );
       }
 
 

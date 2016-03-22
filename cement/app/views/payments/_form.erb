@@ -32,7 +32,7 @@
         Discount Amount<br>
        <%=f.text_field  :discount, id: "discount_amount", class:"keyup_amount", style:"height:30px;" %>
     </div>
-    <div class="span3">
+    <div class="span3" s>
     <br>
       Total Amount: &nbsp;&nbsp;&nbsp; <span id ='total_amnt'> 
       <%=(@payment.payment_amount + @payment.discount)%>
