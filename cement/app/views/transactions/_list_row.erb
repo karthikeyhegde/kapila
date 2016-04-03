@@ -76,7 +76,7 @@
           <%end%>
          </span>
          <span id='t2'>
-          <%=link_to "Delete", remove_transaction_url(c.id), :method => :post, :onclick => "return confirm('Are you sure?')", :class=>"label label-warning"%>
+          <%=link_to "X", remove_transaction_url(c.id), :method => :post, :confirm => "Transaction #{c.id} will be deleted permanently !!  Are you Sure ?", :class=>"label label-warning"%>
          </span>
       </td>
    </tr>
