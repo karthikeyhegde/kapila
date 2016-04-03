@@ -93,6 +93,7 @@ class TransactionsController < ApplicationController
    begin
       @trans.save!
       @trs = Transaction.all
+      rl = 
       flash[:notice] = 'Transaction# '+@trans.id.to_s+' added Successfully !'
       flash.keep(:notice)
 
@@ -198,8 +199,18 @@ class TransactionsController < ApplicationController
 
 def remove
   begin
-   Transaction.find(params[:id]).destroy
-   redirect_to :action => 'index'
+    txn = Transaction.find(params[:id])
+    cid = txn.contact_id
+    txn.destroy
+   flash[:notice] = 'Transaction# '+params[:id]+' deleted Successfully !'
+   flash.keep(:notice)
+   if(params[:show_page] == 'report_page')
+     redirect_to  report_page_contact_path(:id => cid)
+   else
+    redirect_to :action => 'index'
+   end 
+   
+  
   rescue Exception => e 
     p e.to_s
     p e.backtrace

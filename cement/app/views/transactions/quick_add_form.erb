@@ -1,8 +1,20 @@
 <div id='contact-modal-window' class="modal hide fade" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" scrollable ="true">
  Loading ...
 </div>
+<% p params[:commit] 
 
+   p flash[:notice]
+   p "ABCDE"
+%>
 
+<% if !flash[:notice].blank? %>
+
+<div class="alert alert-success">
+       <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;
+       </button>
+        <%=flash[:notice]%>
+     </div>
+<%end%>
 <%= form_for @trans,  :method => @form_method, :remote => true, :html =>{:id=>'transaction_form'} do |f| %>
 
   

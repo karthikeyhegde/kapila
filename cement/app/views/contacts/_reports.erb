@@ -63,7 +63,9 @@
     <th >Item</th>
     <th>Total</th>
     <th>Payment</th>
+
     <th class="col-sm-1" style="color:#330099">Balance</th>
+    <th class="col-sm-1" style="color:#330099">Delete</th>
   </thead>
   <tbody>
    <% i = 0
@@ -135,6 +137,7 @@
     <td> <%= Utility.indian_number c.payment_amount%> </td>
 
     <td> <%=Utility.indian_number((c.contact_balance + c.contact.starting_balance))%> </td>
+    <td> <%=link_to "X", remove_transaction_url(:id => c.id, :show_page => 'report_page'), :method => :post,  :confirm => "Transaction #{c.id} will be deleted permanently !!  Are you Sure ?", :class=>"label label-warning"%></td>
    </tr>
    <%}%>
 

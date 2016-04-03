@@ -115,9 +115,10 @@
 
 <tr>
     <tr>
-     <td style="padding:20px;" colspan="3">
+     <td style="padding:20px;padding-right:0px;" colspan="3">
         <%=submit_tag 'Update Transaction',  class:'btn btn-warning', :data => {disable_with: "Saving ..."}, id:'tx-btn'%><%=space(5).html_safe%> <%=link_to "Cancel", transactions_url, :style=>"font-weight:bold"%>
        </td>
+       <td  colspan="2"><%=link_to "X Delete", remove_transaction_url(:id => @trans.id, :show_page => 'report_page'), :method => :post,  :confirm => "Transaction #{@trans.id} will be deleted permanently !!  Are you Sure ?", :class=>"label label-warning"%></td>
        <tr>
       </tbody>  
 
