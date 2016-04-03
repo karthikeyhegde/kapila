@@ -52,6 +52,8 @@ class PaymentsController < ApplicationController
   def edit
   	@payment = Payment.find(params[:id].to_i)
     @site_name = (@payment.site.blank? ?  "":@payment.site.name)
+    @cont = Contact.all_conts
+    @sites = Site.all
   end
 
   def update
