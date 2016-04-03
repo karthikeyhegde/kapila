@@ -77,7 +77,13 @@
        <tr class="info">
     <%end%>
     <% if params[:commit] != 'Print View' %>
-    <td><%=link_to c.id, edit_transaction_url(c.id)%></td>
+    <td>
+    <%if c.trans_type = "Payment" %>
+      <%=link_to c.id, edit_payment_url(c.id)%>
+    <%else%>  
+    <%=link_to c.id, edit_transaction_url(c.id)%>
+    <%end%>
+    </td>
     <% end %>
     <td><%=c.on_date%></td>
     <td>
@@ -151,6 +157,7 @@
       <td><b><%=Utility.indian_number(Transaction.total_payment @transactions)%></b></td>
       <td><%if !@filter %><b><%=Utility.indian_number( (Transaction.total_balance @transactions) + 
         @transactions[0].contact.starting_balance ) %></b><%end%></td>
+        <td></td>
 
    <tr>
   </tbody>
