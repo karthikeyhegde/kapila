@@ -40,7 +40,7 @@ class Contact < ActiveRecord::Base
   end
 
   def self.trns_search(str)
-  	s_contacts = self.where("name  like '%#{str}%' or subname  like '%#{str}%' ").select('id,name,subname,contact_number').order('name asc')
+  	s_contacts = self.where("name  like '#{str}%' or subname  like '#{str}%' ").select('id,name,subname,contact_number').order('name asc')
   end	
 
   def self.all_conts

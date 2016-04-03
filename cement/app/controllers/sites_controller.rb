@@ -32,7 +32,7 @@ class SitesController < ApplicationController
 
   def search_names
 
-    sites = Site.where("name like '%#{params[:str]}%'").select("id,name").order('name asc').limit(10)
+    sites = Site.where("name like '#{params[:str]}%'").select("id,name").order('name asc').limit(10)
     respond_to do |format|
       format.json {render :json => sites.to_json}
    end  

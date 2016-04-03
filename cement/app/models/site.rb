@@ -26,4 +26,6 @@ class Site < ActiveRecord::Base
      }
      return arr
   end  
+
+  
 end

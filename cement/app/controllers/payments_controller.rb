@@ -16,12 +16,13 @@ class PaymentsController < ApplicationController
   def new
   	@payment = Payment.new
     @site_name = ''
+    @cont = Contact.all_conts
+    @sites = Site.all
   end 	
 
   def create
 
    begin
-
       @p = Payment.new(params[:payment])
       params[:payment_rows].each{|key,val|
 
@@ -34,9 +35,9 @@ class PaymentsController < ApplicationController
       flash[:success] = "Payment Added Successfully"
       @payments = Payment.all
       #render js: "window.location.pathname='#{transactions_path}'"
-      url = report_page_contact_path(:id => @trans.contact_id)
+      url = report_page_contact_path(:id => @p.contact_id)
       render js: "window.location.pathname='#{url}'"
-   
+
    rescue Exception => e
      @trans = @p
      @serr = @e.to_s
@@ -45,7 +46,7 @@ class PaymentsController < ApplicationController
        format.js {render layout: false}
      end       
    end 
-  
+
   end	
 
   def edit

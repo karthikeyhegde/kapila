@@ -125,11 +125,15 @@ $('.report-date').datepicker({ dateFormat: 'dd-mm-yy' });
 
 $('.bst-link').each(function() {
     var elem = $(this);
-    if (elem.attr('id').contains('<%=@show_val%>'))
+    try{
+    if (elem.attr('id').search('<%=@show_val%>') >= 0)
        {
         elem.addClass('bst-link-selected');
        }else{
         elem.removeClass('bst-link-selected');
        }
+     }catch (err){
+      alert(err);
+     }
   });
 </script>

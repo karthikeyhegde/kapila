@@ -52,7 +52,7 @@
                    <%=space(4)%>
                    <%=t.text_field :price, id:"item_price_#{item.id}",  class:"item_numbers", :style=>"height:30px;width:100px;"%> 
               <%=space(23)%>
-               <span id='item_val_<%=item.id%>' class='item_total'> <%=item.amount%></span></td>
+               <span id='item_val_<%=item.id%>' class='item_total'> <%= Utility.indian_number item.amount%></span></td>
 
              </tr>
          <%end%>
@@ -75,7 +75,7 @@
           <tr>
              <td style="border-top:0px;"></td>
              <td style="border-top:0px;font-size:13px;text-align:right;"><br><b>Total Amount</b></td>
-             <td style="padding-left:100px;"> <span id='items_total_value'  style='padding-top:20px;'><%=@trans.amount%></span></td>
+             <td style="padding-left:100px;"> <span id='items_total_value'  style='padding-top:20px;'><%= Utility.indian_number @trans.amount%></span></td>
          
         </tr>
 

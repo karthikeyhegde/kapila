@@ -87,7 +87,7 @@
       Total Amount: <%=space(3)%>
 
        <span id ='total_amnt' style='color:blue;font-weight:600;'> 
-        <%=(@payment.payment_amount + @payment.discount)%>
+        <%=Utility.indian_number (@payment.payment_amount + @payment.discount)%>
       </span>
     </td>
 </tr>
@@ -129,32 +129,41 @@
 
   $('#payment_on_date').datepicker({ dateFormat: 'dd-mm-yy' });
   $("#payment_on_date").datepicker('setDate', new Date());
+
   var contact_names = [];
   var search_contacts = {};
+  var search_sites = {}
+  var site_names = []
+
+   <% @cont.each{|c| %>
+
+                    n_name = "<%=(c.subname == nil ? c.name : c.name+' '+c.subname)%>"
+                    contact_names.push(n_name);
+                    var cnt = {
+                      id :"<%=c.id%>",
+                      contact_number : "<%=c.contact_number%>",
+                    }
+                    search_contacts[n_name] = cnt;
+   <%}%>
+
+  <% @sites.each{|c| %>
+                    site_names.push("<%=c.name%>");
+                    search_sites["<%=c.name%>"] = <%=c.id%>;
+   <%}%>
 
 
   $('#txn_contact').autocomplete({
-    minLength: 2,
+    minLength: 1,
     source: function (request,response){
                a =  $("#txn_contact")[0].value;
-               $.ajax({
-               type:"Get",
-               dataType: 'json',
-               url: "<%=search_names_contacts_path()%>",
-               data:"str="+a ,
-               success: function(data){
-                contact_names = [];
-                search_contacts = {};
-                 $.each(data, function(i,val){
-                    
-                    n_name = (val.subname == null ? val.name : val.name+" "+val.subname)
-                    contact_names.push(n_name);
-                    search_contacts[n_name] = val;
-                 });
-                   
-               }
-             });
-              response(contact_names);
+                c_names = []
+               $.each(contact_names, function( index, value ) {
+
+                 if(value.toLowerCase().startsWith(a.toLowerCase())){
+                  c_names.push(value)
+                 }
+              });
+              response(c_names); 
            },
     select: function( event, ui ) { 
               
@@ -166,25 +175,17 @@
   });
 
  $('#txn_site').autocomplete({
-    minLength: 2,
+    minLength: 1,
     source: function (request,response){
                a =  $("#txn_site")[0].value;
-               $.ajax({
-               type:"Get",
-               dataType: 'json',
-               url: "<%=search_names_sites_path()%>",
-               data:"str="+a ,
-               success: function(data){
-                site_names = [];
-                search_sites = {};
-                 $.each(data, function(i,val){
-                    site_names.push(val.name);
-                    search_sites[val.name] = val.id;
-                 });
-                   
-               }
-             });
-              response(site_names);
+               s_names = []
+             $.each(site_names, function( index, value ) {
+            
+                 if(value.toLowerCase().startsWith(a.toLowerCase())){
+                  s_names.push(value)
+                 }
+              });
+              response(s_names);
            },
      select: function( event, ui ) { 
       $('#payment_site_id').val(search_sites[ui.item.value].toString());}       

@@ -12,7 +12,7 @@
   </thead>
   <tbody>
    <% i = 0
-   @transactions.each{|c|
+   @transactions.reverse!.each{|c|
      i+= 1 %>
     <%if i%2 == 0%>
        <tr>

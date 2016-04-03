@@ -138,19 +138,18 @@ $('.calc-amount').on('keyup', function(){
 
 
  
-  var site_names = [];
-  var search_sites = [];
+
   var last_c_str = '';
   var contact_names = [];
   var search_contacts = {};
-
-
-  
+  var search_sites = {}
+  var site_names = []
+    
 
    
    <% @cont.each{|c| %>
 
-                    n_name = " <%=(c.subname == nil ? c.name : c.name+' '+c.subname)%> "
+                    n_name = "<%=(c.subname == nil ? c.name : c.name+' '+c.subname)%>"
                     contact_names.push(n_name);
                     var cnt = {
                       id :"<%=c.id%>",
@@ -159,10 +158,24 @@ $('.calc-amount').on('keyup', function(){
                     search_contacts[n_name] = cnt;
    <%}%>
 
+  <% @sites.each{|c| %>
+                    site_names.push("<%=c.name%>");
+                    search_sites["<%=c.name%>"] = <%=c.id%>;
+   <%}%>
 
   $('#txn_contact').autocomplete({
-    minLength: 3,
-    source: contact_names,
+    minLength: 1,
+    source: function (request,response){
+             a =  $("#txn_contact")[0].value;
+             c_names = []
+             $.each(contact_names, function( index, value ) {
+
+                 if(value.toLowerCase().startsWith(a.toLowerCase())){
+                  c_names.push(value)
+                 }
+              });
+              response(c_names);
+            },
     select: function( event, ui ) { 
                 $('#transaction_contact_id').val(search_contacts[ui.item.value].id.toString());
                  $('#contact_number').html("Ph: "+search_contacts[ui.item.value].contact_number)
@@ -175,25 +188,17 @@ $('.calc-amount').on('keyup', function(){
 
 
 $('#txn_site').autocomplete({
-    minLength: 2,
+    minLength: 1,
     source: function (request,response){
-               a =  $("#txn_site")[0].value;
-               $.ajax({
-               type:"Get",
-               dataType: 'json',
-               url: "<%=search_names_sites_path()%>",
-               data:"str="+a ,
-               success: function(data){
-                site_names = [];
-                search_sites = {};
-                 $.each(data, function(i,val){
-                    site_names.push(val.name);
-                    search_sites[val.name] = val.id;
-                 });
-                   
-               }
-             });
-              response(site_names);
+              a =  $("#txn_site")[0].value;
+             s_names = []
+             $.each(site_names, function( index, value ) {
+            
+                 if(value.toLowerCase().startsWith(a.toLowerCase())){
+                  s_names.push(value)
+                 }
+              });
+              response(s_names);
            },
      select: function( event, ui ) { 
       $('#transaction_site_id').val(search_sites[ui.item.value].toString());}       

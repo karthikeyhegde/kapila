@@ -97,9 +97,10 @@ class TransactionsController < ApplicationController
       flash.keep(:notice)
 
       if params[:commit] == 'Save and +New'
-          respond_to do |format|
-            format.js {render 'save_and_ad_new', layout: false}
-          end  
+     
+            #format.js {render 'save_and_ad_new', layout: false}
+              url = quick_add_form_transactions_path
+              render js: "window.location.pathname='#{url}'"
       else
         url = report_page_contact_path(:id => @trans.contact_id)
         render js: "window.location.pathname='#{url}'"
@@ -254,6 +255,7 @@ def remove
 
   @trans = Transaction.new
   @cont = Contact.all_conts
+  @sites = Site.all
    
  end 
 

@@ -25,7 +25,7 @@
     <td><%=c.number%></td>
     <td><%=c.price%></td>
     <td> <%=c.amount%></td>
-    <td><%=link_to "View/Edit", edit_transaction_url(c.id), :class=>"label label-info"%><%=space(5).html_safe%></td>     
+    <td><%=link_to "#{c.transaction_id}", edit_transaction_url(c.transaction_id), :class=>"label label-info"%><%=space(5).html_safe%></td>     
    
    </tr>
    <%} unless @txn_items.blank?%>
