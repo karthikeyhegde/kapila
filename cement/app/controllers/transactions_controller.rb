@@ -67,7 +67,8 @@ class TransactionsController < ApplicationController
 
      contact_name = params[:txn][:contact].strip
       if !contact_name.blank? and  contact_name.length > 3
-        if params[:txn][:contact_id].to_i < 1  and Contact.find_by_name(contact_name).nil?
+        cnt =  Contact.find(params[:transaction][:contact_id]) if !params[:transaction][:contact_id].blank?
+        if cnt.blank? || cnt.name_subname != contact_name
             contact = Contact.new
             contact.name = contact_name
             contact.regular = 0
